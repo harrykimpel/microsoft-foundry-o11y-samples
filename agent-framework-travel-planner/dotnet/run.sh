@@ -1,6 +1,6 @@
 export OTEL_DOTNET_AUTO_HOME=/Users/hkimpel/.otel-dotnet-auto
-export OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp.nr-data.net
-#export OTEL_EXPORTER_OTLP_ENDPOINT="https://localhost:21121"
+#export OTEL_EXPORTER_OTLP_ENDPOINT=https://otlp.nr-data.net
+export OTEL_EXPORTER_OTLP_ENDPOINT="https://localhost:21121"
 export OTEL_EXPORTER_OTLP_HEADERS="api-key=${NEW_RELIC_LICENSE_KEY}"
 export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true
 export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_METADATA=true
