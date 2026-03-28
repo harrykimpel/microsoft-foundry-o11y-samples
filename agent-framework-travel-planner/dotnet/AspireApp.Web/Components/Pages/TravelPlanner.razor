@@ -1,0 +1,137 @@
+@page "/travel-planner"
+@rendermode InteractiveServer
+@using Markdig
+
+@inject TravelPlannerApiClient TravelPlannerApi
+
+<PageTitle>Travel Planner</PageTitle>
+
+<h1>Travel Planner</h1>
+<p>Build a simple itinerary with a randomly selected destination and your future departure date.</p>
+
+<div class="travel-planner-form">
+    <div class="mb-3">
+        <label class="form-label" for="travelerName">Traveler name</label>
+        <input class="form-control" id="travelerName" @bind="request.TravelerName" />
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label" for="startDate">Start date</label>
+            <InputDate class="form-control" id="startDate" @bind-Value="request.StartDate" />
+        </div>
+        <div class="col-md-6">
+            <label class="form-label" for="nights">Nights</label>
+            <InputNumber class="form-control" id="nights" @bind-Value="request.Nights" />
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(validationMessage))
+    {
+        <div class="alert alert-warning mt-3" role="alert">@validationMessage</div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <div class="alert alert-danger mt-3" role="alert">@errorMessage</div>
+    }
+
+    <button class="btn btn-primary mt-3" @onclick="CreatePlanAsync" disabled="@isLoading">
+        @(isLoading ? "Planning..." : "Plan trip")
+    </button>
+
+    <p class="text-muted mt-2 mb-0">Destination will be selected randomly from our curated list.</p>
+</div>
+
+@if (isLoading)
+{
+    <p class="mt-4"><em>Creating your plan...</em></p>
+}
+else if (travelPlan is not null)
+{
+    <section class="travel-plan-result mt-4">
+        <p><strong>Start:</strong> @travelPlan.StartDate.ToLongDateString()</p>
+        <p><strong>Duration:</strong> @travelPlan.Nights night(s)</p>
+        <p>@travelPlan.Note</p>
+        <article class="travel-plan-markdown">@RenderMarkdown(travelPlan.Itinerary)</article>
+    </section>
+}
+
+@code {
+    private static readonly MarkdownPipeline MarkdownPipeline = new MarkdownPipelineBuilder()
+        .UseAdvancedExtensions()
+        .Build();
+
+    private TravelPlanRequestInput request = new()
+    {
+        TravelerName = "Harry",
+        StartDate = DateOnly.FromDateTime(DateTime.Today.AddDays(7)),
+        Nights = 3
+    };
+
+    private TravelPlanResponse? travelPlan;
+    private string? validationMessage;
+    private string? errorMessage;
+    private bool isLoading;
+
+    private async Task CreatePlanAsync()
+    {
+        validationMessage = null;
+        errorMessage = null;
+        travelPlan = null;
+
+        if (string.IsNullOrWhiteSpace(request.TravelerName))
+        {
+            validationMessage = "Traveler name is required.";
+            return;
+        }
+
+        if (request.StartDate <= DateOnly.FromDateTime(DateTime.Today))
+        {
+            validationMessage = "Start date must be in the future.";
+            return;
+        }
+
+        if (request.Nights < 1)
+        {
+            validationMessage = "Trip duration must be at least one night.";
+            return;
+        }
+
+        isLoading = true;
+
+        try
+        {
+            travelPlan = await TravelPlannerApi.CreatePlanAsync(new TravelPlanRequest(
+                request.TravelerName.Trim(),
+                request.StartDate,
+                request.Nights));
+        }
+        catch (Exception ex)
+        {
+            errorMessage = ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private static MarkupString RenderMarkdown(string markdown)
+    {
+        if (string.IsNullOrWhiteSpace(markdown))
+        {
+            return (MarkupString)string.Empty;
+        }
+
+        var html = Markdown.ToHtml(markdown, MarkdownPipeline);
+        return new MarkupString(html);
+    }
+
+    private sealed class TravelPlanRequestInput
+    {
+        public string TravelerName { get; set; } = string.Empty;
+        public DateOnly StartDate { get; set; }
+        public int Nights { get; set; }
+    }
+}

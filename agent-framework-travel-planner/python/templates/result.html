@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✈️ Your Travel Plan - AI Travel Planner</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        .header-wrapper { display: flex; align-items: center; gap: 12px; }
+        .branding-title { margin: 0; }
+        .branding-subtitle { margin: 4px 0 0 0; }
+        .header-title { font-size: 2em; margin-top: 10px; }
+        .result-container { 
+            margin-top: 30px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 172, 105, 0.15);
+        }
+        .travel-plan {
+            line-height: 1.8;
+            white-space: pre-wrap;
+            font-size: 1.05em;
+        }
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #00AC69 0%, #00ce7c 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .back-button:hover {
+            background: linear-gradient(135deg, #00FF8C 0%, #00ce7c 100%);
+            box-shadow: 0 4px 15px rgba(0, 206, 124, 0.3);
+            transform: translateY(-2px);
+        }
+        .trip-summary {
+            background: linear-gradient(135deg, #00ce7c 0%, #00FF8C 100%);
+            color: #001f3f;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        /* Feedback section styles */
+        .feedback-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .feedback-title {
+            font-size: 1.1em;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .feedback-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .feedback-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .feedback-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        .feedback-btn.thumbs-up {
+            color: #00AC69;
+            border-color: #00AC69;
+        }
+        .feedback-btn.thumbs-up:hover {
+            background: #00AC69;
+            color: white;
+        }
+        .feedback-btn.thumbs-up.selected {
+            background: #00AC69;
+            color: white;
+        }
+        .feedback-btn.thumbs-down {
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+        .feedback-btn.thumbs-down:hover {
+            background: #dc3545;
+            color: white;
+        }
+        .feedback-btn.thumbs-down.selected {
+            background: #dc3545;
+            color: white;
+        }
+        .feedback-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .feedback-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .feedback-message.success {
+            background: #d4edda;
+            color: #155724;
+            display: block;
+        }
+        .feedback-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header-wrapper">
+        <img src="/static/assets/newrelic-logo.png" style="height:40px;" alt="New Relic Logo" />
+        <div>
+            <h1 class="branding-title">New Relic</h1>
+            <p class="branding-subtitle">DevRel AI Samples</p>
+        </div>
+    </div>
+    <div class="header-title">✈️ Your Travel Plan</div>
+    <hr>
+    
+    <div class="trip-summary">
+        🌍 Destination: {{ destination }} | ⏱️ Duration: {{ duration }} days
+        {% if security_mode %}
+        <br><span style="font-size: 0.9em; margin-top: 5px; display: inline-block;">🔒 Security Mode: {{ security_mode }}</span>
+        {% endif %}
+    </div>
+    
+    <div class="result-container">
+        <div class="travel-plan">{{ travel_plan }}</div>
+    </div>
+    
+    <!-- Feedback Section -->
+    <div class="feedback-section" id="feedback-section">
+        <div class="feedback-title">Was this travel plan helpful?</div>
+        <div class="feedback-buttons">
+            <button class="feedback-btn thumbs-up" id="btn-thumbs-up" onclick="submitFeedback('positive')">
+                👍 Yes, it was great!
+            </button>
+            <button class="feedback-btn thumbs-down" id="btn-thumbs-down" onclick="submitFeedback('negative')">
+                👎 Could be better
+            </button>
+        </div>
+        <div class="feedback-message" id="feedback-message"></div>
+    </div>
+    
+    <a href="/" class="back-button">🔙 Plan Another Trip</a>
+    
+    <hr style="margin-top: 40px;">
+    <div style="text-align: center; color: gray; font-size: 0.9em; margin-top: 30px;">
+        Made with ❤️ using AI Travel Planner | Powered by Microsoft Agent Framework
+    </div>
+    
+    <script>
+        const traceId = "{{ trace_id }}";
+        let feedbackSubmitted = false;
+        
+        async function submitFeedback(feedback) {
+            if (feedbackSubmitted) return;
+            
+            const btnThumbsUp = document.getElementById('btn-thumbs-up');
+            const btnThumbsDown = document.getElementById('btn-thumbs-down');
+            const messageEl = document.getElementById('feedback-message');
+            
+            // Disable buttons during submission
+            btnThumbsUp.disabled = true;
+            btnThumbsDown.disabled = true;
+            
+            try {
+                const response = await fetch('/api/feedback', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        trace_id: traceId,
+                        feedback: feedback
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    feedbackSubmitted = true;
+                    // Highlight the selected button
+                    if (feedback === 'positive') {
+                        btnThumbsUp.classList.add('selected');
+                    } else {
+                        btnThumbsDown.classList.add('selected');
+                    }
+                    messageEl.textContent = '✅ Thank you for your feedback!';
+                    messageEl.className = 'feedback-message success';
+                } else {
+                    throw new Error(data.error || 'Failed to submit feedback');
+                }
+            } catch (error) {
+                messageEl.textContent = '❌ Error submitting feedback. Please try again.';
+                messageEl.className = 'feedback-message error';
+                // Re-enable buttons on error
+                btnThumbsUp.disabled = false;
+                btnThumbsDown.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

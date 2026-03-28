@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✈️ AI Travel Planner</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .header-wrapper { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px;
+            background: linear-gradient(135deg, #00AC69 0%, #00ce7c 100%);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 206, 124, 0.3);
+        }
+        .branding-title { 
+            margin: 0;
+            color: white;
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+        .branding-subtitle { 
+            margin: 4px 0 0 0;
+            color: #00FF8C;
+            font-size: 0.9em;
+        }
+        .header-title { 
+            font-size: 2.5em; 
+            margin-top: 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #00AC69 0%, #00ce7c 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 20px;
+        }
+        .form-section h2 {
+            color: #00AC69;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+        input[type="text"],
+        input[type="date"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        input[type="number"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #00ce7c;
+            box-shadow: 0 0 0 3px rgba(0, 206, 124, 0.1);
+        }
+        select[multiple] {
+            min-height: 120px;
+        }
+        button[type="submit"] {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.3em;
+            background: linear-gradient(135deg, #00AC69 0%, #00ce7c 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 20px;
+        }
+        button[type="submit"]:hover {
+            background: linear-gradient(135deg, #00FF8C 0%, #00ce7c 100%);
+            box-shadow: 0 6px 20px rgba(0, 206, 124, 0.4);
+            transform: translateY(-2px);
+        }
+        button[type="submit"]:active {
+            transform: translateY(0);
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #00AC69;
+        }
+        .loading.show {
+            display: block;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-wrapper">
+        <img src="/static/assets/newrelic-logo.png" style="height:40px;" alt="New Relic Logo" />
+        <div>
+            <h1 class="branding-title">New Relic</h1>
+            <p class="branding-subtitle">DevRel AI Samples</p>
+        </div>
+    </div>
+    <div class="header-title">✈️ AI Travel Planner</div>
+    
+    <div class="form-container">
+        <form action="/plan" method="post" id="travelForm">
+            <div class="form-row">
+                <div class="form-section">
+                    <h2>🌍 Select Your Destination</h2>
+                    <label for="origin">📍 Origin:</label>
+                    <input type="text" id="origin" name="origin" placeholder="e.g., New York, USA" required>
+                    
+                    <label for="destination">🎯 Destination:</label>
+                    <select id="destination" name="destination" required>
+                        <option value="">-- Choose a destination --</option>
+                        {% for dest, desc in destinations.items() %}
+                        <option value="{{ dest }}" data-description="{{ desc }}">{{ dest }}</option>
+                        {% endfor %}
+                    </select>
+                    <div id="destinationDescription" style="margin-top: 10px; padding: 12px; background: linear-gradient(135deg, rgba(0, 206, 124, 0.1), rgba(0, 255, 140, 0.05)); border-radius: 8px; display: none; font-size: 0.95em; color: #00AC69; font-weight: 600;"></div>
+                </div>
+                <div class="form-section">
+                    <h2>✨ Trip Details</h2>
+                    <label for="date">📅 Start Date:</label>
+                    <input type="date" id="date" name="date" required>
+                    
+                    <label for="duration">⏱️ Trip Duration (days):</label>
+                    <input type="number" id="duration" name="duration" min="1" max="30" value="3" required>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>🎨 Your Interests</h2>
+                <label for="interests">Select your interests (hold Ctrl/Cmd to select multiple):</label>
+                <select id="interests" name="interests" multiple>
+                    <option value="Beach & Relaxation">🏖️ Beach & Relaxation</option>
+                    <option value="Culture & History">🎭 Culture & History</option>
+                    <option value="Food & Dining">🍽️ Food & Dining</option>
+                    <option value="Adventure & Hiking">🏔️ Adventure & Hiking</option>
+                    <option value="Shopping">🛍️ Shopping</option>
+                    <option value="Art & Museums">🎨 Art & Museums</option>
+                    <option value="Nightlife">🎉 Nightlife</option>
+                    <option value="Nature & Wildlife">🌿 Nature & Wildlife</option>
+                </select>
+            </div>
+            
+            <div class="form-section">
+                <h2>📝 Special Requests</h2>
+                <label for="special_requests">Any special requirements or preferences?</label>
+                <textarea id="special_requests" name="special_requests" placeholder="e.g., budget-friendly, family-friendly, romantic getaway, accessible travel, etc." rows="4"></textarea>
+            </div>
+            
+            <div class="form-section" style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.05)); border: 2px solid #ffc107; border-radius: 10px; padding: 15px;">
+                <h2>🔒 Security Demo Mode</h2>
+                <p style="font-size: 0.9em; color: #856404; margin: 10px 0;">
+                    <strong>Educational Feature:</strong> Choose how the app handles user input to see different security implementations.
+                    <a href="/attacks" target="_blank" style="color: #00AC69; text-decoration: underline;">View attack examples →</a>
+                </p>
+                <label for="security_mode">Security Mode:</label>
+                <select id="security_mode" name="security_mode" style="background: #fff; border: 2px solid #ffc107;">
+                    <option value="normal">Normal Mode (standard validation)</option>
+                    <option value="vulnerable">⚠️ Vulnerable Mode (demo: no sanitization)</option>
+                    <option value="secure">✅ Secure Mode (demo: strict validation)</option>
+                </select>
+                <p style="font-size: 0.85em; color: #856404; margin: 10px 0 0 0; font-style: italic;">
+                    💡 Try entering one of the <a href="/attacks" target="_blank" style="color: #dc3545; font-weight: bold;">attack payloads</a> in "Special Requests" while in Vulnerable Mode to see how prompt injection works!
+                </p>
+            </div>
+            
+            <button type="submit">🚀 Generate My Travel Plan</button>
+        </form>
+        
+        <div class="loading" id="loadingMessage">
+            <div style="font-size: 3em;">✈️</div>
+            <p>Planning your amazing trip... This may take a minute!</p>
+        </div>
+    </div>
+    
+    <hr style="margin-top: 40px;">
+    <div style="text-align: center; color: gray; font-size: 0.9em; margin-top: 30px;">
+        Made with ❤️ using AI Travel Planner | Powered by Microsoft Agent Framework
+    </div>
+    
+    <script>
+        // Set minimum date to today
+        const dateInput = document.getElementById('date');
+        const today = new Date().toISOString().split('T')[0];
+        dateInput.setAttribute('min', today);
+        dateInput.value = today;
+        
+        // Show destination description when selected
+        const destinationSelect = document.getElementById('destination');
+        const descriptionDiv = document.getElementById('destinationDescription');
+        
+        destinationSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            const description = selectedOption.getAttribute('data-description');
+            
+            if (description && this.value) {
+                descriptionDiv.textContent = description;
+                descriptionDiv.style.display = 'block';
+            } else {
+                descriptionDiv.style.display = 'none';
+            }
+        });
+        
+        // Update form action based on security mode
+        const securityModeSelect = document.getElementById('security_mode');
+        const travelForm = document.getElementById('travelForm');
+        
+        securityModeSelect.addEventListener('change', function() {
+            const mode = this.value;
+            if (mode === 'vulnerable') {
+                travelForm.action = '/plan-vulnerable';
+            } else if (mode === 'secure') {
+                travelForm.action = '/plan-secure';
+            } else {
+                travelForm.action = '/plan';
+            }
+        });
+        
+        // Show loading message when form is submitted
+        document.getElementById('travelForm').addEventListener('submit', function() {
+            document.getElementById('loadingMessage').classList.add('show');
+            document.querySelector('button[type="submit"]').disabled = true;
+        });
+    </script>
+</body>
+</html>

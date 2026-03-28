@@ -1,0 +1,553 @@
+/* Modern CSS for AI Travel Planner (New Relic theme) */
+
+/* Global styles */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+}
+
+/* Container and header */
+.main {
+    background: linear-gradient(135deg, #00AC69 0%, #00ce7c 100%);
+}
+
+.stContainer {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.header-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, #00AC69 0%, #00ce7c 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 206, 124, 0.3);
+}
+
+.logo-section {
+    font-size: 2.5em;
+}
+
+.branding-text {
+    color: white;
+    font-weight: bold;
+}
+
+.branding-title {
+    font-size: 1.8em;
+    margin: 0;
+    color: white;
+}
+
+.branding-subtitle {
+    font-size: 0.9em;
+    color: #00FF8C;
+    margin: 5px 0 0 0;
+}
+
+.destination-card {
+    background: linear-gradient(135deg, #00ce7c 0%, #00FF8C 100%);
+    color: #001f3f;
+    padding: 15px;
+    border-radius: 10px;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-weight: 600;
+}
+
+.destination-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 206, 124, 0.3);
+    background: linear-gradient(135deg, #00FF8C 0%, #00ce7c 100%);
+}
+
+.header-title {
+    text-align: center;
+    background: linear-gradient(135deg, #00AC69 0%, #00ce7c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.result-container {
+    background: linear-gradient(135deg, #00ce7c 0%, #00FF8C 100%);
+    color: #001f3f;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(0, 206, 124, 0.2);
+}
+
+.result-container h2 {
+    color: #00AC69;
+}
+
+/* Button styling */
+.stButton>button,
+button[type="submit"] {
+    background: linear-gradient(135deg, #00AC69 0%, #00ce7c 100%) !important;
+    color: white !important;
+    border: none !important;
+    font-weight: bold !important;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.stButton>button:hover,
+button[type="submit"]:hover {
+    background: linear-gradient(135deg, #00FF8C 0%, #00ce7c 100%) !important;
+    box-shadow: 0 4px 15px rgba(0, 206, 124, 0.3) !important;
+    transform: translateY(-2px);
+}
+
+/* Form inputs */
+input[type="text"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1em;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    font-family: inherit;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #00ce7c;
+    box-shadow: 0 0 0 3px rgba(0, 206, 124, 0.1);
+}
+
+/* Slider styling: target common browsers and Streamlit wrapper */
+.stSlider input[type=range],
+input[type=range] {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    width: 100% !important;
+    height: 10px !important;
+    background: linear-gradient(90deg, #00ce7c, #00AC69) !important;
+    border-radius: 10px !important;
+    outline: none !important;
+    border: none !important;
+}
+
+/* Webkit track */
+input[type=range]::-webkit-slider-runnable-track {
+    height: 10px;
+    background: linear-gradient(90deg, #00ce7c, #00AC69) !important;
+    border-radius: 10px;
+    border: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    width: 20px !important;
+    height: 20px !important;
+    background: #00FF8C !important;
+    border-radius: 50% !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+    cursor: pointer !important;
+    border: 2px solid #00AC69 !important;
+    margin-top: -5px;
+}
+
+/* Firefox */
+input[type=range]::-moz-range-track {
+    height: 10px;
+    background: linear-gradient(90deg, #00ce7c, #00AC69) !important;
+    border-radius: 10px;
+    border: none;
+}
+
+input[type=range]::-moz-range-thumb {
+    width: 20px !important;
+    height: 20px !important;
+    background: #00FF8C !important;
+    border-radius: 50% !important;
+    border: 2px solid #00AC69 !important;
+}
+
+/* IE/Edge */
+input[type=range]::-ms-track {
+    height: 10px;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+
+input[type=range]::-ms-fill-lower {
+    background: linear-gradient(90deg, #00ce7c, #00AC69) !important;
+    border-radius: 10px;
+}
+
+input[type=range]::-ms-thumb {
+    width: 20px !important;
+    height: 20px !important;
+    background: #00FF8C !important;
+    border-radius: 50% !important;
+    border: 2px solid #00AC69 !important;
+}
+
+/* Remove focus ring / ensure focus shows green accent */
+input[type=range]:focus,
+.stSlider input[type=range]:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 4px rgba(0, 206, 124, 0.15) !important;
+}
+
+/* Animation classes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Loading spinner */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner {
+    border: 4px solid rgba(0, 206, 124, 0.1);
+    border-top: 4px solid #00ce7c;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 20px auto;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .header-title {
+        font-size: 1.8em;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    .header-wrapper {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* Utility classes */
+.text-center {
+    text-align: center;
+}
+
+.mt-1 {
+    margin-top: 10px;
+}
+
+.mt-2 {
+    margin-top: 20px;
+}
+
+.mt-3 {
+    margin-top: 30px;
+}
+
+.mt-4 {
+    margin-top: 40px;
+}
+
+.mb-1 {
+    margin-bottom: 10px;
+}
+
+.mb-2 {
+    margin-bottom: 20px;
+}
+
+.mb-3 {
+    margin-bottom: 30px;
+}
+
+.mb-4 {
+    margin-bottom: 40px;
+}
+
+.p-1 {
+    padding: 10px;
+}
+
+.p-2 {
+    padding: 20px;
+}
+
+.p-3 {
+    padding: 30px;
+}
+
+.p-4 {
+    padding: 40px;
+}
+
+/* Card styling */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* New Relic theme colors */
+:root {
+    --nr-primary: #00AC69;
+    --nr-secondary: #00ce7c;
+    --nr-accent: #00FF8C;
+    --nr-dark: #001f3f;
+    --nr-light: #f5f7fa;
+}
+
+border-radius: 10px;
+margin: 10px 0;
+cursor: pointer;
+transition: transform 0.2s;
+font-weight: 600;
+}
+
+.destination-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 206, 124, 0.3);
+    background: linear-gradient(135deg, #00FF8C 0%, #00ce7c 100%);
+}
+
+.header-title {
+    text-align: center;
+    background: linear-gradient(135deg, #00AC69 0%, #00ce7c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2.5em;
+    font-weight: bold;
+    margin: 20px 0;
+}
+
+.result-container {
+    background: linear-gradient(135deg, #00ce7c 0%, #00FF8C 100%);
+    color: #001f3f;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 4px 15px rgba(0, 206, 124, 0.2);
+}
+
+.result-container h2 {
+    color: #00AC69;
+}
+
+.stButton>button {
+    background: linear-gradient(135deg, #00AC69 0%, #00ce7c 100%) !important;
+    color: white !important;
+    border: none !important;
+    font-weight: bold !important;
+}
+
+.stButton>button:hover {
+    background: linear-gradient(135deg, #00FF8C 0%, #00ce7c 100%) !important;
+    box-shadow: 0 4px 15px rgba(0, 206, 124, 0.3) !important;
+}
+
+/* Slider styling: target common browsers and Streamlit wrapper */
+.stSlider input[type=range],
+input[type=range] {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    width: 100% !important;
+    height: 10px !important;
+    background: linear-gradient(90deg, #00ce7c, #00AC69) !important;
+    border-radius: 10px !important;
+    outline: none !important;
+    border: none !important;
+}
+
+/* Webkit track */
+input[type=range]::-webkit-slider-runnable-track {
+    height: 10px;
+    background: linear-gradient(90deg, #00ce7c, #00AC69) !important;
+    border-radius: 10px;
+    border: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    width: 20px !important;
+    height: 20px !important;
+    background: #00FF8C !important;
+    border-radius: 50% !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+    cursor: pointer !important;
+    border: 2px solid #00AC69 !important;
+    margin-top: -5px;
+    /* center thumb on track */
+}
+
+/* Firefox */
+input[type=range]::-moz-range-track {
+    height: 10px;
+    background: linear-gradient(90deg, #00ce7c, #00AC69) !important;
+    border-radius: 10px;
+    border: none;
+}
+
+input[type=range]::-moz-range-thumb {
+    width: 20px !important;
+    height: 20px !important;
+    background: #00FF8C !important;
+    border-radius: 50% !important;
+    border: 2px solid #00AC69 !important;
+}
+
+/* IE/Edge */
+input[type=range]::-ms-track {
+    height: 10px;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+}
+
+input[type=range]::-ms-fill-lower {
+    background: linear-gradient(90deg, #00ce7c, #00AC69) !important;
+    border-radius: 10px;
+}
+
+input[type=range]::-ms-thumb {
+    width: 20px !important;
+    height: 20px !important;
+    background: #00FF8C !important;
+    border-radius: 50% !important;
+    border: 2px solid #00AC69 !important;
+}
+
+/* Remove focus ring red / ensure focus shows green accent */
+input[type=range]:focus,
+.stSlider input[type=range]:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 4px rgba(0, 206, 124, 0.15) !important;
+}
+
+.st-emotion-cache-11xx4re {
+    background-color: #00FF8C !important;
+}
+
+.st-emotion-cache-jigjfz {
+    color: #00FF8C !important;
+}
+
+/* Stronger overrides for Streamlit slider variants */
+.stSlider input[type=range],
+div[data-testid*="stSlider"] input[type=range],
+input[type=range] {
+    accent-color: #00ce7c !important;
+    -webkit-appearance: none !important;
+    background: linear-gradient(135deg, #00FF8C, #00ce7c) !important;
+}
+
+/* Ensure any numeric label or value near the slider uses primary text color */
+div[data-testid*="stSlider"] span,
+.stSlider span {
+    color: #001f3f !important;
+}
+
+/* Multi-select / select list styling */
+div[role="listbox"] {
+    background: linear-gradient(135deg, rgba(0, 206, 124, 0.08), rgba(0, 255, 140, 0.06));
+    border: 1px solid rgba(0, 172, 105, 0.15);
+    border-radius: 8px;
+}
+
+div[role="option"] {
+    padding: 6px 8px;
+}
+
+/* Selected tokens (tags) */
+.css-1xt0rr2,
+.css-1v0mbdj {
+    /* token classnames may vary between Streamlit versions; these are common */
+    background: linear-gradient(135deg, #00FF8C, #00ce7c) !important;
+    color: #00303a !important;
+    border-radius: 6px !important;
+}
+
+/* Streamlit theme variable overrides to apply New Relic primary color */
+:root {
+    --primaryColor: #00ce7c !important;
+    --secondaryBackgroundColor: #ffffff !important;
+    --primaryTextColor: #001f3f !important;
+}
+
+/* Force form controls and multiselect tokens into New Relic palette */
+.stSelectbox,
+.stSlider,
+.stMultiSelect,
+.stTextArea {
+    color: #00AC69 !important;
+}
+
+/* Broad override to prevent any red text inside the multiselect component */
+.stMultiSelect * {
+    color: #001f3f !important;
+}
+
+/* Tag/token styling inside multiselect (more specific targets may be needed per Streamlit version) */
+.stMultiSelect [data-baseweb="tag"],
+.stMultiSelect .css-1xt0rr2,
+.stMultiSelect .css-1v0mbdj {
+    background: linear-gradient(135deg, #00FF8C, #00ce7c) !important;
+    color: #00303a !important;
+    border-radius: 6px !important;
+}

@@ -1,0 +1,5 @@
+agent-framework-core
+flask
+flask-cors
+requests
+python-dotenv

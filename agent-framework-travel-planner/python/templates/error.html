@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❌ Error - AI Travel Planner</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        .header-wrapper { display: flex; align-items: center; gap: 12px; }
+        .branding-title { margin: 0; }
+        .branding-subtitle { margin: 4px 0 0 0; }
+        .header-title { font-size: 2em; margin-top: 10px; }
+        .error-container { 
+            margin-top: 30px;
+            background: #ffe0e0;
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #ff6b6b;
+        }
+        .error-message {
+            color: #c92a2a;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        .back-button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #00AC69 0%, #00ce7c 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .back-button:hover {
+            background: linear-gradient(135deg, #00FF8C 0%, #00ce7c 100%);
+            box-shadow: 0 4px 15px rgba(0, 206, 124, 0.3);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="header-wrapper">
+        <img src="/static/assets/newrelic-logo.png" style="height:40px;" alt="New Relic Logo" />
+        <div>
+            <h1 class="branding-title">New Relic</h1>
+            <p class="branding-subtitle">DevRel AI Samples</p>
+        </div>
+    </div>
+    <div class="header-title">❌ Error</div>
+    <hr>
+    
+    <div class="error-container">
+        <h2>😔 Oops! Something went wrong</h2>
+        <div class="error-message">
+            {{ error }}
+        </div>
+    </div>
+    
+    <a href="/" class="back-button">🔙 Try Again</a>
+    
+    <hr style="margin-top: 40px;">
+    <div style="text-align: center; color: gray; font-size: 0.9em; margin-top: 30px;">
+        Made with ❤️ using AI Travel Planner | Powered by Microsoft Agent Framework
+    </div>
+</body>
+</html>
