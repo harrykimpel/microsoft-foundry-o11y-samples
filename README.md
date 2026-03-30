@@ -24,7 +24,7 @@ This repository contains a collection of observability and AI agent samples usin
 
 ### [realtime](./realtime)
 
-- .NET sample for real-time AI agent interactions, audio analysis, audio generation,weather API integration, and OpenTelemetry tracing.
+- .NET sample for real-time AI agent interactions, audio analysis, audio generation, weather API integration, and OpenTelemetry tracing.
 
 ---
 
