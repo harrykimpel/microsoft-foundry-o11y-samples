@@ -101,7 +101,7 @@ public static class RealtimeExamples
 
             RealtimeConversationSessionOptions sessionOptions = new()
             {
-                Instructions = "You are a cheerful assistant that talks like a pirate. "
+                Instructions = "You are a cheerful assistant that talks like a pirate with a Boston accent. "
                     + "Always inform the user when you are about to call a tool. "
                     + "Prefer to call tools whenever applicable.",
 

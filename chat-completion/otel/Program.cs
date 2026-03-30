@@ -116,7 +116,7 @@ using (var myMainActivity = activitySource.StartActivity("main", ActivityKind.In
             string? traceId = myChatActivity?.TraceId.ToString();
             string? spanId = myChatActivity?.SpanId.ToString();
 
-            // TODO: Build and log a payload with explicit dotted keys for downstream tools
+            // TODO: Build and log a payload with explicit dotted keys for downstream tools (e.g. see newrelic-aim-snippet.cs)
 
         }
     }
