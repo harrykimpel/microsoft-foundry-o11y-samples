@@ -92,10 +92,10 @@ using (var myMainActivity = activitySource.StartActivity("main", ActivityKind.In
 
     EmbeddingClient client = new("text-embedding-3-small", credential, options);
 
-    string category = "Luxury";
-    string description = "Best hotel in town if you like luxury hotels. They have an amazing infinity pool, a spa,"
-        + " and a really helpful concierge. The location is perfect -- right downtown, close to all the tourist"
-        + " attractions. We highly recommend this hotel.";
+    string category = "Luxus";
+    string description = "Bestes Hotel der Stadt, wenn Sie Luxushotels mögen. Es verfügt über einen fantastischen Infinity-Pool, ein Spa"
+        + " und einen wirklich hilfsbereiten Concierge. Die Lage ist perfekt – mitten in der Innenstadt, in der Nähe aller"
+        + " Sehenswürdigkeiten. Wir empfehlen dieses Hotel sehr.";
     List<string> inputs = new() { category, description };
 
     OpenAIEmbeddingCollection collection = await client.GenerateEmbeddingsAsync(inputs);

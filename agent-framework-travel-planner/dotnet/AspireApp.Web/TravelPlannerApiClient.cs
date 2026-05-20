@@ -12,12 +12,12 @@ public class TravelPlannerApiClient(HttpClient httpClient)
         {
             var message = await response.Content.ReadAsStringAsync(cancellationToken);
             throw new InvalidOperationException(string.IsNullOrWhiteSpace(message)
-                ? "Travel planning request failed."
+                ? "Die Reiseplanungsanfrage ist fehlgeschlagen."
                 : message);
         }
 
         var plan = await response.Content.ReadFromJsonAsync<TravelPlanResponse>(cancellationToken);
-        return plan ?? throw new InvalidOperationException("The travel planning service returned an empty response.");
+        return plan ?? throw new InvalidOperationException("Der Reiseplanungs-Dienst hat eine leere Antwort zurückgegeben.");
     }
 }
 

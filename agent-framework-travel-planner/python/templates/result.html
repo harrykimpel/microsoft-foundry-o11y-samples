@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✈️ Your Travel Plan - AI Travel Planner</title>
+    <title>✈️ Dein Reiseplan – KI-Reiseplaner</title>
     <link rel="stylesheet" href="/static/styles.css">
     <style>
         .header-wrapper { display: flex; align-items: center; gap: 12px; }
@@ -133,42 +133,42 @@
         <img src="/static/assets/newrelic-logo.png" style="height:40px;" alt="New Relic Logo" />
         <div>
             <h1 class="branding-title">New Relic</h1>
-            <p class="branding-subtitle">DevRel AI Samples</p>
+            <p class="branding-subtitle">DevRel KI-Beispiele</p>
         </div>
     </div>
-    <div class="header-title">✈️ Your Travel Plan</div>
+    <div class="header-title">✈️ Dein Reiseplan</div>
     <hr>
-    
+
     <div class="trip-summary">
-        🌍 Destination: {{ destination }} | ⏱️ Duration: {{ duration }} days
+        🌍 Reiseziel: {{ destination }} | ⏱️ Dauer: {{ duration }} Tage
         {% if security_mode %}
-        <br><span style="font-size: 0.9em; margin-top: 5px; display: inline-block;">🔒 Security Mode: {{ security_mode }}</span>
+        <br><span style="font-size: 0.9em; margin-top: 5px; display: inline-block;">🔒 Sicherheitsmodus: {{ security_mode }}</span>
         {% endif %}
     </div>
-    
+
     <div class="result-container">
         <div class="travel-plan">{{ travel_plan }}</div>
     </div>
-    
+
     <!-- Feedback Section -->
     <div class="feedback-section" id="feedback-section">
-        <div class="feedback-title">Was this travel plan helpful?</div>
+        <div class="feedback-title">War dieser Reiseplan hilfreich?</div>
         <div class="feedback-buttons">
             <button class="feedback-btn thumbs-up" id="btn-thumbs-up" onclick="submitFeedback('positive')">
-                👍 Yes, it was great!
+                👍 Ja, er war großartig!
             </button>
             <button class="feedback-btn thumbs-down" id="btn-thumbs-down" onclick="submitFeedback('negative')">
-                👎 Could be better
+                👎 Könnte besser sein
             </button>
         </div>
         <div class="feedback-message" id="feedback-message"></div>
     </div>
-    
-    <a href="/" class="back-button">🔙 Plan Another Trip</a>
-    
+
+    <a href="/" class="back-button">🔙 Weitere Reise planen</a>
+
     <hr style="margin-top: 40px;">
     <div style="text-align: center; color: gray; font-size: 0.9em; margin-top: 30px;">
-        Made with ❤️ using AI Travel Planner | Powered by Microsoft Agent Framework
+        Mit ❤️ erstellt mit dem KI-Reiseplaner | Unterstützt durch das Microsoft Agent Framework
     </div>
     
     <script>
@@ -208,13 +208,13 @@
                     } else {
                         btnThumbsDown.classList.add('selected');
                     }
-                    messageEl.textContent = '✅ Thank you for your feedback!';
+                    messageEl.textContent = '✅ Vielen Dank für dein Feedback!';
                     messageEl.className = 'feedback-message success';
                 } else {
-                    throw new Error(data.error || 'Failed to submit feedback');
+                    throw new Error(data.error || 'Feedback konnte nicht gesendet werden');
                 }
             } catch (error) {
-                messageEl.textContent = '❌ Error submitting feedback. Please try again.';
+                messageEl.textContent = '❌ Fehler beim Senden des Feedbacks. Bitte versuche es erneut.';
                 messageEl.className = 'feedback-message error';
                 // Re-enable buttons on error
                 btnThumbsUp.disabled = false;

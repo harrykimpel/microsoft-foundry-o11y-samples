@@ -4,25 +4,25 @@
 
 @inject WeatherApiClient WeatherApi
 
-<PageTitle>Weather</PageTitle>
+<PageTitle>Wetter</PageTitle>
 
-<h1>Weather</h1>
+<h1>Wetter</h1>
 
-<p>This component demonstrates showing data loaded from a backend API service.</p>
+<p>Diese Komponente zeigt, wie Daten aus einem Backend-API-Dienst geladen und angezeigt werden.</p>
 
 @if (forecasts == null)
 {
-    <p><em>Loading...</em></p>
+    <p><em>Wird geladen...</em></p>
 }
 else
 {
     <table class="table">
         <thead>
             <tr>
-                <th>Date</th>
-                <th aria-label="Temperature in Celsius">Temp. (C)</th>
-                <th aria-label="Temperature in Fahrenheit">Temp. (F)</th>
-                <th>Summary</th>
+                <th>Datum</th>
+                <th aria-label="Temperatur in Celsius">Temp. (C)</th>
+                <th aria-label="Temperatur in Fahrenheit">Temp. (F)</th>
+                <th>Zusammenfassung</th>
             </tr>
         </thead>
         <tbody>

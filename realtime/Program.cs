@@ -36,19 +36,19 @@ public static class RealtimeExamples
 
     private static readonly RealtimeFunctionTool getCurrentWeatherTool = new(functionName: nameof(GetCurrentWeather))
     {
-        FunctionDescription = "gets the weather for a location",
+        FunctionDescription = "ruft das Wetter für einen Ort ab",
         FunctionParameters = BinaryData.FromString("""
             {
                 "type": "object",
                 "properties": {
                     "location": {
                         "type": "string",
-                        "description": "The city and state, e.g. Boston, MA"
+                        "description": "Die Stadt und das Bundesland, z. B. Boston, MA"
                     },
                     "unit": {
                         "type": "string",
                         "enum": [ "celsius", "fahrenheit" ],
-                        "description": "The temperature unit to use. Infer this from the specified location."
+                        "description": "Die zu verwendende Temperatureinheit. Leite diese aus dem angegebenen Ort ab."
                     }
                 },
                 "required": [ "location" ]
@@ -66,14 +66,14 @@ public static class RealtimeExamples
 
     private static readonly RealtimeFunctionTool getCurrentDateTimeTool = new(functionName: nameof(GetDateTime))
     {
-        FunctionDescription = "gets the current date and time for a location",
+        FunctionDescription = "ruft das aktuelle Datum und die Uhrzeit für einen Ort ab",
         FunctionParameters = BinaryData.FromString("""
             {
                 "type": "object",
                 "properties": {
                     "location": {
                         "type": "string",
-                        "description": "The city and state, e.g. Boston, MA"
+                        "description": "Die Stadt und das Bundesland, z. B. Boston, MA"
                     }
                 },
                 "required": [ "location" ]
@@ -101,9 +101,9 @@ public static class RealtimeExamples
 
             RealtimeConversationSessionOptions sessionOptions = new()
             {
-                Instructions = "You are a cheerful assistant that talks like a pirate with a Boston accent. "
-                    + "Always inform the user when you are about to call a tool. "
-                    + "Prefer to call tools whenever applicable.",
+                Instructions = "Du bist ein fröhlicher Assistent, der wie ein Pirat mit Bostoner Akzent auf Deutsch spricht. "
+                    + "Informiere den Benutzer immer, wenn du gerade ein Tool aufrufen wirst. "
+                    + "Bevorzuge den Aufruf von Tools, wann immer es passt.",
 
                 Tools = { getCurrentWeatherTool, getCurrentDateTimeTool },
 
@@ -134,9 +134,9 @@ public static class RealtimeExamples
                 // conversation one by one. Note that adding a message will not automatically initiate
                 // a response from the model.
                 var userMessage =
-                    "I'm trying to decide what to wear on my trip. "
-                    + "Make a fun statement about the `Boston Code Camp` 40th edition that I am attending. "
-                    + "Then, get the current date/time in Boston, MA and include that in your response.";
+                    "Ich versuche zu entscheiden, was ich auf meiner Reise anziehen soll. "
+                    + "Mach eine lustige Bemerkung zur 40. Ausgabe des `Boston Code Camp`, an der ich teilnehme. "
+                    + "Hole dann das aktuelle Datum/die Uhrzeit in Boston, MA und füge das in deine Antwort ein.";
                 await sessionClient.AddItemAsync(RealtimeItem.CreateUserMessageItem(userMessage));
 
                 // using (var sendInputActivity = activitySource.StartActivity("SendInput", ActivityKind.Internal))

@@ -86,14 +86,14 @@ using (var myMainActivity = activitySource.StartActivity("main", ActivityKind.In
         myChatActivity?.SetTag("transaction.type", "custom");
         myChatActivity?.SetTag("transaction.name", "CompleteChat");
 
-        string userPrompt = "What's the best way to train a parrot?";
+        string userPrompt = "Was ist der beste Weg, einen Papagei zu trainieren?";
 
         DateTime startTime = DateTime.UtcNow;
         ChatCompletion completion = await client.CompleteChatAsync(
         [
-            new SystemChatMessage("You are a helpful assistant that talks like a pirate with a Boston accent."),
-            new UserChatMessage("Hi, can you help me?"),
-            new AssistantChatMessage("Arrr! Of course, me hearty! What can I do for ye?"),
+            new SystemChatMessage("Du bist ein hilfsbereiter Assistent, der auf Deutsch wie ein Pirat mit Bostoner Akzent spricht."),
+            new UserChatMessage("Hallo, kannst du mir helfen?"),
+            new AssistantChatMessage("Arrr! Aber selbstverständlich, mein Freund! Was kann ich für dich tun?"),
             new UserChatMessage(userPrompt),
         ]);
         DateTime endTime = DateTime.UtcNow;

@@ -31,10 +31,10 @@ ChatClient client = new(
 
 ChatCompletion completion = await client.CompleteChatAsync(
 [
-    new SystemChatMessage("You are a helpful assistant that talks like a pirate."),
-            new UserChatMessage("Hi, can you help me?"),
-            new AssistantChatMessage("Arrr! Of course, me hearty! What can I do for ye?"),
-            new UserChatMessage("What's the best way to train a parrot?"),
+    new SystemChatMessage("Du bist ein hilfsbereiter Assistent, der auf Deutsch wie ein Pirat spricht."),
+            new UserChatMessage("Hallo, kannst du mir helfen?"),
+            new AssistantChatMessage("Arrr! Aber selbstverständlich, mein Freund! Was kann ich für dich tun?"),
+            new UserChatMessage("Was ist der beste Weg, einen Papagei zu trainieren?"),
         ]);
 
 logger.LogInformation($"Model={completion.Model}");

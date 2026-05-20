@@ -94,26 +94,26 @@ if (endpointUri.AbsolutePath is not "/" and not "" || !string.IsNullOrEmpty(endp
         "Do not include paths like /openai/deployments/... or query parameters.");
 }
 
-app.MapGet("/", () => "API service is running. Navigate to /weatherforecast to see sample data.");
+app.MapGet("/", () => "Der API-Dienst läuft. Rufe /weatherforecast auf, um Beispieldaten zu sehen.");
 
-string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
+string[] summaries = ["Eiskalt", "Frostig", "Kühl", "Frisch", "Mild", "Warm", "Lau", "Heiß", "Schwül", "Glühend"];
 
 Dictionary<string, string> destinations = new(StringComparer.OrdinalIgnoreCase)
 {
-    ["Garmisch-Partenkirchen, Germany"] = "🏔️ Alpine village with stunning mountain views",
-    ["Munich, Germany"] = "🍺 Bavarian capital famous for culture and beer",
-    ["Berlin, Germany"] = "🎨 Historic and vibrant cultural hub",
-    ["Rome, Italy"] = "🏛️ Ancient city with rich history and art",
-    ["Barcelona, Spain"] = "🏖️ Coastal city with stunning architecture",
-    ["Boston, USA"] = "🍀 Historic city with rich colonial heritage",
-    ["New York, USA"] = "🗽 The city that never sleeps",
-    ["Tokyo, Japan"] = "🗾 Bustling metropolis with ancient temples",
-    ["Sydney, Australia"] = "🦘 Opera House and beautiful beaches",
-    ["Cairo, Egypt"] = "🔺 Gateway to ancient wonders",
-    ["Cape Town, South Africa"] = "🌅 Scenic beauty and Table Mountain",
-    ["Rio de Janeiro, Brazil"] = "🎭 Vibrant culture and beaches",
-    ["Bali, Indonesia"] = "🌴 Tropical paradise and spiritual haven",
-    ["Paris, France"] = "🗼 The City of Light, romantic and iconic"
+    ["Garmisch-Partenkirchen, Deutschland"] = "🏔️ Alpendorf mit atemberaubendem Bergpanorama",
+    ["München, Deutschland"] = "🍺 Bayerische Hauptstadt, berühmt für Kultur und Bier",
+    ["Berlin, Deutschland"] = "🎨 Historisches und lebendiges Kulturzentrum",
+    ["Rom, Italien"] = "🏛️ Antike Stadt mit reicher Geschichte und Kunst",
+    ["Barcelona, Spanien"] = "🏖️ Küstenstadt mit beeindruckender Architektur",
+    ["Boston, USA"] = "🍀 Historische Stadt mit reichem kolonialem Erbe",
+    ["New York, USA"] = "🗽 Die Stadt, die niemals schläft",
+    ["Tokio, Japan"] = "🗾 Pulsierende Metropole mit alten Tempeln",
+    ["Sydney, Australien"] = "🦘 Opernhaus und wunderschöne Strände",
+    ["Kairo, Ägypten"] = "🔺 Tor zu antiken Wundern",
+    ["Kapstadt, Südafrika"] = "🌅 Landschaftliche Schönheit und Tafelberg",
+    ["Rio de Janeiro, Brasilien"] = "🎭 Lebendige Kultur und Strände",
+    ["Bali, Indonesien"] = "🌴 Tropisches Paradies und spirituelle Oase",
+    ["Paris, Frankreich"] = "🗼 Die Stadt der Lichter, romantisch und ikonisch"
 };
 
 // Create the chat client and agent, and provide the function tool to the agent.
@@ -132,7 +132,7 @@ var instrumentedChatClient = new AzureOpenAIClient(
 var agent = new ChatClientAgent(
         instrumentedChatClient,
         name: "Travel-Planner-Agent",
-        instructions: "You are a helpful assistant that provides concise and informative responses.",
+        instructions: "Du bist ein hilfsbereiter Assistent, der prägnante und informative Antworten auf Deutsch liefert.",
         tools: [
             AIFunctionFactory.Create(GetWeather),
             AIFunctionFactory.Create(GetRandomDestination),
@@ -193,7 +193,7 @@ app.MapPost("/travelplan", async (TravelPlanRequest request, CancellationToken c
     if (request.StartDate <= DateOnly.FromDateTime(DateTime.UtcNow))
     {
         app.Logger.LogError("Start date must be in the future. Received start date: {StartDate}", request.StartDate);
-        return Results.BadRequest("Start date must be in the future.");
+        return Results.BadRequest("Das Startdatum muss in der Zukunft liegen.");
     }
 
     var nights = Math.Max(1, request.Nights);
@@ -203,9 +203,9 @@ app.MapPost("/travelplan", async (TravelPlanRequest request, CancellationToken c
     using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
 
     string suggestions =
-    @"- Visit local landmarks and museums
-      - Try a neighborhood food tour
-      - Reserve one day for a relaxed itinerary";
+    @"- Besuche lokale Sehenswürdigkeiten und Museen
+      - Probiere eine kulinarische Tour durch das Viertel aus
+      - Reserviere einen Tag für ein entspanntes Programm";
 
     var itinerary = string.Empty;
 
@@ -213,21 +213,23 @@ app.MapPost("/travelplan", async (TravelPlanRequest request, CancellationToken c
     {
         var duration = (request.Nights + 1).ToString();
         var date = request.StartDate.ToString("yyyy-MM-dd");
-        string userPrompt = $@"Plan me a {duration}-day trip to a random destination starting on {date}.
+        string userPrompt = $@"Plane mir eine {duration}-tägige Reise zu einem zufälligen Reiseziel, beginnend am {date}.
 
-            Trip Details:
-                - Date: {date}
-                - Duration: {duration} days
-                - Interests: 
+            Reisedetails:
+                - Datum: {date}
+                - Dauer: {duration} Tage
+                - Interessen:
                   {suggestions}
 
-            Instructions:
-                1. A detailed day-by-day itinerary with activities tailored to the interests
-                2. Current weather information for the destination
-                3. Local cuisine recommendations
-                4. Best times to visit specific attractions
-                5. Travel tips and budget estimates
-                6. Current date and time reference";
+            Anweisungen:
+                1. Einen detaillierten Tag-für-Tag-Reiseplan mit Aktivitäten, die auf die Interessen abgestimmt sind
+                2. Aktuelle Wetterinformationen für das Reiseziel
+                3. Empfehlungen zur lokalen Küche
+                4. Beste Zeiten zum Besuch bestimmter Sehenswürdigkeiten
+                5. Reisetipps und Budgetschätzungen
+                6. Aktuelles Datum und Uhrzeit als Referenz
+
+            Antworte ausschließlich auf Deutsch.";
 
         app.Logger.LogInformation("Invoking agent with prompt: {UserPrompt}", userPrompt);
         DateTime agentStartTime = DateTime.UtcNow;
@@ -368,7 +370,7 @@ app.MapPost("/travelplan", async (TravelPlanRequest request, CancellationToken c
     return Results.Ok(new TravelPlanResponse(
         request.StartDate,
         nights,
-        $"Mock plan generated for {request.TravelerName}.",
+        $"Beispielplan für {request.TravelerName} erstellt.",
         itinerary));
 })
 .WithName("CreateTravelPlan");

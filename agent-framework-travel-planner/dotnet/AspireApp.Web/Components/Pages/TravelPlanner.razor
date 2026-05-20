@@ -4,24 +4,24 @@
 
 @inject TravelPlannerApiClient TravelPlannerApi
 
-<PageTitle>Travel Planner</PageTitle>
+<PageTitle>Reiseplaner</PageTitle>
 
-<h1>Travel Planner</h1>
-<p>Build a simple itinerary with a randomly selected destination and your future departure date.</p>
+<h1>Reiseplaner</h1>
+<p>Erstelle einen einfachen Reiseplan mit einem zufällig ausgewählten Reiseziel und deinem zukünftigen Abreisedatum.</p>
 
 <div class="travel-planner-form">
     <div class="mb-3">
-        <label class="form-label" for="travelerName">Traveler name</label>
+        <label class="form-label" for="travelerName">Name des Reisenden</label>
         <input class="form-control" id="travelerName" @bind="request.TravelerName" />
     </div>
 
     <div class="row g-3">
         <div class="col-md-6">
-            <label class="form-label" for="startDate">Start date</label>
+            <label class="form-label" for="startDate">Startdatum</label>
             <InputDate class="form-control" id="startDate" @bind-Value="request.StartDate" />
         </div>
         <div class="col-md-6">
-            <label class="form-label" for="nights">Nights</label>
+            <label class="form-label" for="nights">Nächte</label>
             <InputNumber class="form-control" id="nights" @bind-Value="request.Nights" />
         </div>
     </div>
@@ -37,21 +37,21 @@
     }
 
     <button class="btn btn-primary mt-3" @onclick="CreatePlanAsync" disabled="@isLoading">
-        @(isLoading ? "Planning..." : "Plan trip")
+        @(isLoading ? "Plane..." : "Reise planen")
     </button>
 
-    <p class="text-muted mt-2 mb-0">Destination will be selected randomly from our curated list.</p>
+    <p class="text-muted mt-2 mb-0">Das Reiseziel wird zufällig aus unserer kuratierten Liste ausgewählt.</p>
 </div>
 
 @if (isLoading)
 {
-    <p class="mt-4"><em>Creating your plan...</em></p>
+    <p class="mt-4"><em>Dein Plan wird erstellt...</em></p>
 }
 else if (travelPlan is not null)
 {
     <section class="travel-plan-result mt-4">
         <p><strong>Start:</strong> @travelPlan.StartDate.ToLongDateString()</p>
-        <p><strong>Duration:</strong> @travelPlan.Nights night(s)</p>
+        <p><strong>Dauer:</strong> @travelPlan.Nights Nacht/Nächte</p>
         <p>@travelPlan.Note</p>
         <article class="travel-plan-markdown">@RenderMarkdown(travelPlan.Itinerary)</article>
     </section>
@@ -82,19 +82,19 @@ else if (travelPlan is not null)
 
         if (string.IsNullOrWhiteSpace(request.TravelerName))
         {
-            validationMessage = "Traveler name is required.";
+            validationMessage = "Der Name des Reisenden ist erforderlich.";
             return;
         }
 
         if (request.StartDate <= DateOnly.FromDateTime(DateTime.Today))
         {
-            validationMessage = "Start date must be in the future.";
+            validationMessage = "Das Startdatum muss in der Zukunft liegen.";
             return;
         }
 
         if (request.Nights < 1)
         {
-            validationMessage = "Trip duration must be at least one night.";
+            validationMessage = "Die Reisedauer muss mindestens eine Nacht betragen.";
             return;
         }
 
