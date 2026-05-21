@@ -11,4 +11,7 @@ export OTEL_SEMCONV_STABILITY_OPT_IN=http/dup,database/dup,genai,gen_ai_latest_e
 export OTEL_TRACES_EXPORTER=otlp
 export OPENAI_EXPERIMENTAL_ENABLE_OPEN_TELEMETRY=true
 
+export MSFT_FOUNDRY_ENDPOINT_2="${MSFT_FOUNDRY_ENDPOINT_2}" # e.g. https://your-resource.openai.azure.com/openai/v1
+export MSFT_FOUNDRY_API_KEY_2="${MSFT_FOUNDRY_API_KEY_2}"
+
 dotnet Program.cs

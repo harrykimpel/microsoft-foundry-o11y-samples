@@ -43,7 +43,7 @@ public static class RealtimeExamples
                 "properties": {
                     "location": {
                         "type": "string",
-                        "description": "Die Stadt und das Bundesland, z. B. Boston, MA"
+                        "description": "Die Stadt und das Bundesland, z. B. Heide-Park Soltau/Niedersachsen, Deutschland"
                     },
                     "unit": {
                         "type": "string",
@@ -73,7 +73,7 @@ public static class RealtimeExamples
                 "properties": {
                     "location": {
                         "type": "string",
-                        "description": "Die Stadt und das Bundesland, z. B. Boston, MA"
+                        "description": "Die Stadt und das Bundesland, z. B. Heide-Park Soltau/Niedersachsen, Deutschland"
                     }
                 },
                 "required": [ "location" ]
@@ -101,7 +101,7 @@ public static class RealtimeExamples
 
             RealtimeConversationSessionOptions sessionOptions = new()
             {
-                Instructions = "Du bist ein fröhlicher Assistent, der wie ein Pirat mit Bostoner Akzent auf Deutsch spricht. "
+                Instructions = "Du bist ein fröhlicher Assistent, der wie ein Pirat mit Norddeutschem Akzent auf Deutsch spricht. "
                     + "Informiere den Benutzer immer, wenn du gerade ein Tool aufrufen wirst. "
                     + "Bevorzuge den Aufruf von Tools, wann immer es passt.",
 
@@ -135,14 +135,14 @@ public static class RealtimeExamples
                 // a response from the model.
                 var userMessage =
                     "Ich versuche zu entscheiden, was ich auf meiner Reise anziehen soll. "
-                    + "Mach eine lustige Bemerkung zur 40. Ausgabe des `Boston Code Camp`, an der ich teilnehme. "
-                    + "Hole dann das aktuelle Datum/die Uhrzeit in Boston, MA und füge das in deine Antwort ein.";
+                    + "Mach eine lustige Bemerkung zur diesjährigen Ausgabe von `Cloud Land 2026`, an der ich teilnehme. "
+                    + "Hole dann das aktuelle Datum/die Uhrzeit im Heide-Park Soltau/Deutschland und füge das in deine Antwort ein.";
                 await sessionClient.AddItemAsync(RealtimeItem.CreateUserMessageItem(userMessage));
 
                 // using (var sendInputActivity = activitySource.StartActivity("SendInput", ActivityKind.Internal))
                 // {
                 //string inputAudioFilePath = Path.Join("Assets", "realtime_whats_the_weather_pcm16_24khz_mono.wav");
-                string inputAudioFilePath = Path.Join("Assets", "realtime-weather-bos-2_pcm16_24khz_mono.wav");
+                string inputAudioFilePath = Path.Join("Assets", "realtime-wetter-heide-park.wav");
                 using Stream inputAudioStream = File.OpenRead(inputAudioFilePath);
                 _ = sessionClient.SendInputAudioAsync(inputAudioStream);
                 // }
@@ -283,12 +283,12 @@ public static class RealtimeExamples
                                         string output = string.Empty;
                                         if (functionCallItem.FunctionName == nameof(GetDateTime))
                                         {
-                                            output = GetDateTime(location: "Boston, MA");
+                                            output = GetDateTime(location: "Heide-Park Soltau/Deutschland");
                                         }
                                         else if (functionCallItem.FunctionName == nameof(GetCurrentWeather))
                                         {
 
-                                            output = GetCurrentWeather(location: "Boston, MA");
+                                            output = GetCurrentWeather(location: "Heide-Park Soltau/Deutschland");
                                         }
 
                                         RealtimeItem functionCallOutputItem = RealtimeItem.CreateFunctionCallOutputItem(
