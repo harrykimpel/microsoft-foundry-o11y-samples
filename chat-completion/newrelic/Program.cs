@@ -1,12 +1,15 @@
 #:package OpenAI@2.9.1
 #:package Microsoft.Extensions.Logging.Console@10.0.5
 #:package NewRelic.Agent@10.50.0
+#:package NewRelic.Agent.Api@10.50.0
 
 using OpenAI;
 using OpenAI.Chat;
 using System.ClientModel;
 using Microsoft.Extensions.Logging;
+using NewRelic.Api.Agent;
 
+NewRelic.Api.Agent.NewRelic.StartAgent();
 
 #pragma warning disable OPENAI001
 

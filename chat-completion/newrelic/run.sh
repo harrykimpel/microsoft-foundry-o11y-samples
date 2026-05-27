@@ -9,9 +9,11 @@ export NEW_RELIC_APP_NAME="chat-completion"
 export NEW_RELIC_SEND_DATA_ON_EXIT=true
 export NEW_RELIC_SEND_DATA_ON_EXIT_THRESHOLD_MS=2000
 export NEW_RELIC_LOG=MyApp.log
+#export NEW_RELIC_LOG_LEVEL=debug
 export NEW_RELIC_LOG_ENABLED=true
+export NEW_RELIC_AI_MONITORING_ENABLED=TRUE
 
 export OPENAI_EXPERIMENTAL_ENABLE_OPEN_TELEMETRY=true
 
-#dotnet Program.cs
-$CORECLR_NEWRELIC_HOME/run.sh dotnet Program.cs
+dotnet Program.cs
+#$CORECLR_NEWRELIC_HOME/run.sh dotnet Program.cs
