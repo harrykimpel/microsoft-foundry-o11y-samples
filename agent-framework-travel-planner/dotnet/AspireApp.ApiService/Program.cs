@@ -63,7 +63,8 @@ if (app.Environment.IsDevelopment())
 }
 
 var endpoint = Environment.GetEnvironmentVariable("MSFT_FOUNDRY_ENDPOINT")?.Trim() ?? throw new InvalidOperationException("MSFT_FOUNDRY_ENDPOINT is not set.");
-endpoint = endpoint.Replace("/openai/v1/", ""); // Remove path if user set the endpoint to the full URL by mistake, we only need the base URL for AzureOpenAIClient.)
+endpoint = endpoint.Replace("/openai/v1", ""); // Remove path if user set the endpoint to the full URL by mistake, we only need the base URL for AzureOpenAIClient.)
+app.Logger.LogInformation("Foundry endpoint: {endpoint}", endpoint);
 var endpointAPIKey = Environment.GetEnvironmentVariable("MSFT_FOUNDRY_API_KEY")?.Trim() ?? throw new InvalidOperationException("MSFT_FOUNDRY_API_KEY is not set.");
 var deploymentName = Environment.GetEnvironmentVariable("MSFT_FOUNDRY_DEPLOYMENT_NAME")?.Trim();
 if (string.IsNullOrWhiteSpace(deploymentName))

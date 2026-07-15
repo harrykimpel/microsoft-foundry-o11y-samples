@@ -1,48 +1,61 @@
-#:package OpenAI@2.9.1
-#:package Microsoft.Extensions.Logging.Console@10.0.5
-#:package NewRelic.Agent@10.50.0
-
 using OpenAI;
 using OpenAI.Chat;
 using System.ClientModel;
 using Microsoft.Extensions.Logging;
-
+using NewRelic.Api.Agent;
 
 #pragma warning disable OPENAI001
 
-const string deploymentName = "gpt-5-mini";
-string endpoint = Environment.GetEnvironmentVariable("MSFT_FOUNDRY_ENDPOINT") ?? "https://api.openai.com/v1";
-string apiKey = Environment.GetEnvironmentVariable("MSFT_FOUNDRY_API_KEY") ?? "YOUR_API_KEY_HERE";
+NewRelic.Api.Agent.NewRelic.StartAgent();
 
-using ILoggerFactory factory = LoggerFactory.Create(builder =>
+[Transaction]
+static async Task PirateChat()
 {
-    builder.AddConsole();
-});
-ILogger logger = factory.CreateLogger("Program");
-logger.LogInformation("Hello World! Logging is {Description}.", "fun");
+    var tx = NewRelic.Api.Agent.NewRelic.GetAgent().CurrentTransaction;
+    tx.AddCustomAttribute("aim", true);
 
-ChatClient client = new(
-    credential: new ApiKeyCredential(apiKey),
-    model: deploymentName,
-    options: new OpenAIClientOptions()
+    // The default transaction name at this point will be: WebTransaction/MVC/Home/Order
+
+    // Set custom transaction name
+    NewRelic.Api.Agent.NewRelic.SetTransactionName("Other", "PirateChat");
+
+    const string deploymentName = "gpt-5-mini";
+    string endpoint = Environment.GetEnvironmentVariable("MSFT_FOUNDRY_ENDPOINT") ?? "https://api.openai.com/v1";
+    string apiKey = Environment.GetEnvironmentVariable("MSFT_FOUNDRY_API_KEY") ?? "YOUR_API_KEY_HERE";
+
+    using ILoggerFactory factory = LoggerFactory.Create(builder =>
     {
-        Endpoint = new($"{endpoint}"),
+        builder.AddConsole();
     });
+    ILogger logger = factory.CreateLogger("Program");
+    logger.LogInformation("Hello World! Logging is {Description}.", "fun");
 
-ChatCompletion completion = await client.CompleteChatAsync(
-[
-    new SystemChatMessage("Du bist ein hilfsbereiter Assistent, der auf Deutsch wie ein Pirat spricht."),
+    ChatClient client = new(
+        credential: new ApiKeyCredential(apiKey),
+        model: deploymentName,
+        options: new OpenAIClientOptions()
+        {
+            Endpoint = new($"{endpoint}"),
+        });
+
+    ChatCompletion completion = await client.CompleteChatAsync(
+    [
+        new SystemChatMessage("Du bist ein hilfsbereiter Assistent, der auf Deutsch wie ein Pirat spricht."),
             new UserChatMessage("Hallo, kannst du mir helfen?"),
             new AssistantChatMessage("Arrr! Aber selbstverständlich, mein Freund! Was kann ich für dich tun?"),
             new UserChatMessage("Was ist der beste Weg, einen Papagei zu trainieren?"),
-        ]);
+    ]);
 
-logger.LogInformation($"Model={completion.Model}");
-foreach (ChatMessageContentPart contentPart in completion.Content)
-{
-    string message = contentPart.Text;
-    logger.LogInformation($"Chat Role: {completion.Role}");
-    logger.LogInformation($"Message: {message}");
+    logger.LogInformation($"Model={completion.Model}");
+    foreach (ChatMessageContentPart contentPart in completion.Content)
+    {
+        string message = contentPart.Text;
+        logger.LogInformation($"Chat Role: {completion.Role}");
+        logger.LogInformation($"Message: {message}");
+    }
 }
 
-Thread.Sleep(15000); // Sleep for a bit to ensure all logs are flushed before the program exits.
+await PirateChat();
+
+// Sleep for a bit to ensure all logs are flushed before the program exits.
+Thread.Sleep(5000);

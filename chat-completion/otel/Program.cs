@@ -1,9 +1,9 @@
-#:package OpenAI@2.9.1
-#:package OpenTelemetry.AutoInstrumentation@1.14.1
-#:package OpenTelemetry.Instrumentation.Http@1.15.0
-#:package OpenTelemetry.Instrumentation.GrpcCore@1.0.0-beta.10
-#:package OpenTelemetry.Extensions.Hosting@1.15.0
-#:package OpenTelemetry.Exporter.OpenTelemetryProtocol@1.15.0
+#:package OpenAI@2.10.0
+#:package OpenTelemetry.AutoInstrumentation@1.16.0-beta.1
+#:package OpenTelemetry.Instrumentation.Http@1.15.1
+#:package OpenTelemetry.Instrumentation.GrpcCore@1.0.0-beta.11
+#:package OpenTelemetry.Extensions.Hosting@1.15.3
+#:package OpenTelemetry.Exporter.OpenTelemetryProtocol@1.15.3
 
 using OpenAI;
 using OpenAI.Chat;

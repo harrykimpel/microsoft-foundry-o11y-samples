@@ -1,7 +1,8 @@
-#:package OpenAI@2.9.1
-#:package OpenTelemetry.Instrumentation.Http@1.15.0
-#:package OpenTelemetry.Extensions.Hosting@1.15.0
-#:package OpenTelemetry.Exporter.OpenTelemetryProtocol@1.15.0
+#:package OpenAI@2.10.0
+#:package OpenTelemetry.AutoInstrumentation@1.16.0-beta.1
+#:package OpenTelemetry.Instrumentation.Http@1.15.1
+#:package OpenTelemetry.Extensions.Hosting@1.15.3
+#:package OpenTelemetry.Exporter.OpenTelemetryProtocol@1.15.3
 
 using OpenAI.Embeddings;
 using System.Diagnostics;

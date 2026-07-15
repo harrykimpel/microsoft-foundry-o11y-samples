@@ -18,7 +18,7 @@ echo "✓ Python 3 found"
 if [ ! -d ".venv" ]; then
     echo ""
     echo "Creating virtual environment..."
-    python3 -m venv .venv
+    python3.14 -m venv .venv
     echo "✓ Virtual environment created"
 fi
 
@@ -69,7 +69,7 @@ export OTEL_LOGS_EXPORTER=otlp
 export OTEL_EXPORTER_OTLP_ENDPOINT='https://otlp.nr-data.net'
 # EU region
 #export OTEL_EXPORTER_OTLP_ENDPOINT='https://otlp.eu01.nr-data.net'
-export OTEL_EXPORTER_OTLP_HEADERS="api-key=$NEW_RELIC_LICENSE_KEY"
+export OTEL_EXPORTER_OTLP_HEADERS="api-key=${NEW_RELIC_LICENSE_KEY}"
 export OTEL_SERVICE_NAME="agent-travel-planner"
 
 export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true
@@ -77,18 +77,20 @@ export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_METADATA=true
 export OTEL_INSTRUMENTATION_GENAI_CAPTURE_TOOL_OUTPUT=true
 export OTEL_INSTRUMENTATION_GENAI_CAPTURE_TOOL_INPUT=true
 export OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+export OTEL_SEMCONV_STABILITY_OPT_IN=http/dup,database/dup,genai,gen_ai_latest_experimental
+export OPENAI_EXPERIMENTAL_ENABLE_OPEN_TELEMETRY=true
 
 export ENABLE_OTEL=true
 export ENABLE_SENSITIVE_DATA=true
 export OTLP_ENDPOINT='https://otlp.nr-data.net'
-export OTLP_HEADERS="api-key=$NEW_RELIC_LICENSE_KEY"
+export OTLP_HEADERS="api-key=${NEW_RELIC_LICENSE_KEY}"
 
 export GITHUB_TOKEN="$GITHUB_TOKEN"
 export GITHUB_ENDPOINT="https://models.github.ai/inference"
 #export GITHUB_MODEL_ID="gpt-5-mini"
 #export OPENAI_CHAT_MODEL_ID="gpt-5-mini"
-export MSFT_FOUNDRY_ENDPOINT="$MSFT_FOUNDRY_ENDPOINT" # e.g., https://your-resource-name.openai.azure.com/openai/v1/
-export MSFT_FOUNDRY_API_KEY="$MSFT_FOUNDRY_API_KEY"
+export MSFT_FOUNDRY_ENDPOINT="${MSFT_FOUNDRY_ENDPOINT}" # e.g., https://your-resource-name.openai.azure.com/openai/v1/
+export MSFT_FOUNDRY_API_KEY="${MSFT_FOUNDRY_API_KEY}"
 
 # Run the Flask application
 python web_app.py

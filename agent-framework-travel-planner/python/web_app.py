@@ -324,7 +324,7 @@ model_id = os.environ.get("MODEL_ID", "gpt-5-mini")
 openai_chat_client = OpenAIChatClient(
     base_url=os.environ.get("MSFT_FOUNDRY_ENDPOINT"),
     api_key=os.environ.get("MSFT_FOUNDRY_API_KEY"),
-    model_id=model_id
+    model=model_id
 )
 
 # 🤖 Create the Travel Planning Agent
@@ -333,7 +333,7 @@ openai_chat_client = OpenAIChatClient(
 # - instructions: System prompt that defines the agent's personality and role
 # - tools: List of functions the agent can call to perform actions
 agent = openai_chat_client.as_agent(
-    chat_client=openai_chat_client,
+    #    chat_client=openai_chat_client,
     instructions="Du bist ein hilfreicher KI-Agent, der Kunden dabei unterstützt, Urlaube zu zufälligen Reisezielen zu planen. Antworte ausschließlich auf Deutsch.",
     # Tool functions available to the agent
     tools=[get_selected_destination, get_weather, get_datetime]
@@ -401,7 +401,7 @@ def plan_trip():
             # Extract the travel plan
             # print("🚀 Agent response received:", response)
             last_message = response.messages[-1]
-            text_content = last_message.contents[0].text
+            text_content = last_message.text
 
             # Return result as HTML
             return render_template('result.html',

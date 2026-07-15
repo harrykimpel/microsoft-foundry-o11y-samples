@@ -1,5 +1,6 @@
-agent-framework-core
+agent-framework
 flask
 flask-cors
 requests
 python-dotenv
+opentelemetry-exporter-otlp

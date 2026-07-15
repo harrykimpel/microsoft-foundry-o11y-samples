@@ -1,3 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -z "${NEW_RELIC_LICENSE_KEY:-}" ]; then
+    echo "ERROR: NEW_RELIC_LICENSE_KEY is not set — agent will not send data." >&2
+    exit 1
+fi
+
 export CORECLR_ENABLE_PROFILING=1
 export CORECLR_PROFILER={36032161-FFC0-4B61-B559-F6C5D41BAE5A}
 export CORECLR_NEWRELIC_HOME=/usr/local/newrelic-dotnet-agent
@@ -10,8 +18,8 @@ export NEW_RELIC_SEND_DATA_ON_EXIT=true
 export NEW_RELIC_SEND_DATA_ON_EXIT_THRESHOLD_MS=2000
 export NEW_RELIC_LOG=MyApp.log
 export NEW_RELIC_LOG_ENABLED=true
+export NEW_RELIC_AI_MONITORING_ENABLED=TRUE
 
 export OPENAI_EXPERIMENTAL_ENABLE_OPEN_TELEMETRY=true
 
-#dotnet Program.cs
-$CORECLR_NEWRELIC_HOME/run.sh dotnet Program.cs
+$CORECLR_NEWRELIC_HOME/run.sh dotnet run
