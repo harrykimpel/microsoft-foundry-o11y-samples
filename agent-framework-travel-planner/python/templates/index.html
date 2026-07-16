@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✈️ KI-Reiseplaner</title>
+    <title>✈️ AI Travel Planner</title>
     <link rel="stylesheet" href="/static/styles.css">
     <style>
         body {
@@ -137,22 +137,22 @@
         <img src="/static/assets/newrelic-logo.png" style="height:40px;" alt="New Relic Logo" />
         <div>
             <h1 class="branding-title">New Relic</h1>
-            <p class="branding-subtitle">DevRel KI-Beispiele</p>
+            <p class="branding-subtitle">DevRel AI Samples</p>
         </div>
     </div>
-    <div class="header-title">✈️ KI-Reiseplaner</div>
-
+    <div class="header-title">✈️ AI Travel Planner</div>
+    
     <div class="form-container">
         <form action="/plan" method="post" id="travelForm">
             <div class="form-row">
                 <div class="form-section">
-                    <h2>🌍 Wähle dein Reiseziel</h2>
-                    <label for="origin">📍 Abreiseort:</label>
-                    <input type="text" id="origin" name="origin" placeholder="z. B. New York, USA" required>
-
-                    <label for="destination">🎯 Reiseziel:</label>
+                    <h2>🌍 Select Your Destination</h2>
+                    <label for="origin">📍 Origin:</label>
+                    <input type="text" id="origin" name="origin" placeholder="e.g., New York, USA" required>
+                    
+                    <label for="destination">🎯 Destination:</label>
                     <select id="destination" name="destination" required>
-                        <option value="">-- Reiseziel auswählen --</option>
+                        <option value="">-- Choose a destination --</option>
                         {% for dest, desc in destinations.items() %}
                         <option value="{{ dest }}" data-description="{{ desc }}">{{ dest }}</option>
                         {% endfor %}
@@ -160,65 +160,65 @@
                     <div id="destinationDescription" style="margin-top: 10px; padding: 12px; background: linear-gradient(135deg, rgba(0, 206, 124, 0.1), rgba(0, 255, 140, 0.05)); border-radius: 8px; display: none; font-size: 0.95em; color: #00AC69; font-weight: 600;"></div>
                 </div>
                 <div class="form-section">
-                    <h2>✨ Reisedetails</h2>
-                    <label for="date">📅 Startdatum:</label>
+                    <h2>✨ Trip Details</h2>
+                    <label for="date">📅 Start Date:</label>
                     <input type="date" id="date" name="date" required>
-
-                    <label for="duration">⏱️ Reisedauer (Tage):</label>
+                    
+                    <label for="duration">⏱️ Trip Duration (days):</label>
                     <input type="number" id="duration" name="duration" min="1" max="30" value="3" required>
                 </div>
             </div>
-
+            
             <div class="form-section">
-                <h2>🎨 Deine Interessen</h2>
-                <label for="interests">Wähle deine Interessen (halte Strg/Cmd gedrückt, um mehrere auszuwählen):</label>
+                <h2>🎨 Your Interests</h2>
+                <label for="interests">Select your interests (hold Ctrl/Cmd to select multiple):</label>
                 <select id="interests" name="interests" multiple>
-                    <option value="Strand & Entspannung">🏖️ Strand & Entspannung</option>
-                    <option value="Kultur & Geschichte">🎭 Kultur & Geschichte</option>
-                    <option value="Essen & Restaurants">🍽️ Essen & Restaurants</option>
-                    <option value="Abenteuer & Wandern">🏔️ Abenteuer & Wandern</option>
+                    <option value="Beach & Relaxation">🏖️ Beach & Relaxation</option>
+                    <option value="Culture & History">🎭 Culture & History</option>
+                    <option value="Food & Dining">🍽️ Food & Dining</option>
+                    <option value="Adventure & Hiking">🏔️ Adventure & Hiking</option>
                     <option value="Shopping">🛍️ Shopping</option>
-                    <option value="Kunst & Museen">🎨 Kunst & Museen</option>
-                    <option value="Nachtleben">🎉 Nachtleben</option>
-                    <option value="Natur & Tierwelt">🌿 Natur & Tierwelt</option>
+                    <option value="Art & Museums">🎨 Art & Museums</option>
+                    <option value="Nightlife">🎉 Nightlife</option>
+                    <option value="Nature & Wildlife">🌿 Nature & Wildlife</option>
                 </select>
             </div>
-
+            
             <div class="form-section">
-                <h2>📝 Besondere Wünsche</h2>
-                <label for="special_requests">Gibt es besondere Anforderungen oder Vorlieben?</label>
-                <textarea id="special_requests" name="special_requests" placeholder="z. B. budgetfreundlich, familienfreundlich, romantischer Kurzurlaub, barrierefreies Reisen usw." rows="4"></textarea>
+                <h2>📝 Special Requests</h2>
+                <label for="special_requests">Any special requirements or preferences?</label>
+                <textarea id="special_requests" name="special_requests" placeholder="e.g., budget-friendly, family-friendly, romantic getaway, accessible travel, etc." rows="4"></textarea>
             </div>
-
+            
             <div class="form-section" style="background: linear-gradient(135deg, rgba(255, 193, 7, 0.1), rgba(255, 152, 0, 0.05)); border: 2px solid #ffc107; border-radius: 10px; padding: 15px;">
-                <h2>🔒 Sicherheits-Demomodus</h2>
+                <h2>🔒 Security Demo Mode</h2>
                 <p style="font-size: 0.9em; color: #856404; margin: 10px 0;">
-                    <strong>Lehrfunktion:</strong> Wähle aus, wie die App Benutzereingaben verarbeitet, um verschiedene Sicherheitsimplementierungen zu sehen.
-                    <a href="/attacks" target="_blank" style="color: #00AC69; text-decoration: underline;">Angriffsbeispiele anzeigen →</a>
+                    <strong>Educational Feature:</strong> Choose how the app handles user input to see different security implementations.
+                    <a href="/attacks" target="_blank" style="color: #00AC69; text-decoration: underline;">View attack examples →</a>
                 </p>
-                <label for="security_mode">Sicherheitsmodus:</label>
+                <label for="security_mode">Security Mode:</label>
                 <select id="security_mode" name="security_mode" style="background: #fff; border: 2px solid #ffc107;">
-                    <option value="normal">Normaler Modus (Standardvalidierung)</option>
-                    <option value="vulnerable">⚠️ Verwundbarer Modus (Demo: keine Bereinigung)</option>
-                    <option value="secure">✅ Sicherer Modus (Demo: strenge Validierung)</option>
+                    <option value="normal">Normal Mode (standard validation)</option>
+                    <option value="vulnerable">⚠️ Vulnerable Mode (demo: no sanitization)</option>
+                    <option value="secure">✅ Secure Mode (demo: strict validation)</option>
                 </select>
                 <p style="font-size: 0.85em; color: #856404; margin: 10px 0 0 0; font-style: italic;">
-                    💡 Versuche, eine der <a href="/attacks" target="_blank" style="color: #dc3545; font-weight: bold;">Angriffs-Payloads</a> im Feld „Besondere Wünsche" einzugeben, während du im verwundbaren Modus bist, um zu sehen, wie Prompt-Injection funktioniert!
+                    💡 Try entering one of the <a href="/attacks" target="_blank" style="color: #dc3545; font-weight: bold;">attack payloads</a> in "Special Requests" while in Vulnerable Mode to see how prompt injection works!
                 </p>
             </div>
-
-            <button type="submit">🚀 Meinen Reiseplan erstellen</button>
+            
+            <button type="submit">🚀 Generate My Travel Plan</button>
         </form>
-
+        
         <div class="loading" id="loadingMessage">
             <div style="font-size: 3em;">✈️</div>
-            <p>Deine fantastische Reise wird geplant... Das kann eine Minute dauern!</p>
+            <p>Planning your amazing trip... This may take a minute!</p>
         </div>
     </div>
-
+    
     <hr style="margin-top: 40px;">
     <div style="text-align: center; color: gray; font-size: 0.9em; margin-top: 30px;">
-        Mit ❤️ erstellt mit dem KI-Reiseplaner | Unterstützt durch das Microsoft Agent Framework
+        Made with ❤️ using AI Travel Planner | Powered by Microsoft Agent Framework
     </div>
     
     <script>
