@@ -76,6 +76,8 @@ otlp_log_exporter = OTLPLogExporter()
 # configure_otel_providers(exporters=exporters, enable_sensitive_data=True)
 
 configure_otel_providers()
+
+# Get the current tracer from Agent Framework OTel config
 tracer = get_tracer()
 
 # Workaround: Replace the MeterProvider with one that has proper periodic export
