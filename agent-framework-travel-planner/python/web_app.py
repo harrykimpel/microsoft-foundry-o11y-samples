@@ -65,10 +65,16 @@ otlp_trace_exporter = OTLPSpanExporter()
 otlp_metric_exporter = OTLPMetricExporter()
 otlp_log_exporter = OTLPLogExporter()
 
-# setup_observability(
-#     enable_sensitive_data=True,
-#     exporters=[otlp_trace_exporter, otlp_metric_exporter, otlp_log_exporter]
-# )
+# Create custom exporters with specific configuration
+# exporters = [
+#     OTLPSpanExporter(endpoint="http://localhost:4317",
+#                      compression=Compression.Gzip),
+#     OTLPLogExporter(endpoint="http://localhost:4317"),
+#     OTLPMetricExporter(endpoint="http://localhost:4317"),
+# ]
+# These will be added alongside any exporters from environment variables
+# configure_otel_providers(exporters=exporters, enable_sensitive_data=True)
+
 configure_otel_providers()
 tracer = get_tracer()
 
