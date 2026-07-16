@@ -51,7 +51,12 @@ The script runs `dotnet Program.cs` directly (single-file C# script mode).
 
 ## Inputs and outputs
 
-- **Input audio**: [Assets/realtime-wetter-heide-park.wav](./Assets/realtime-wetter-heide-park.wav) — pre-recorded German prompt sent to the model. Swap to a different file by editing `inputAudioFilePath` in [Program.cs](./Program.cs).
+- **Input audio**: [Assets/realtime-wetter-heide-park.wav](./Assets/realtime-wetter-heide-park.wav) — pre-recorded German prompt sent to the model. Swap to a different file by editing `inputAudioFilePath` in [Program.cs](./Program.cs). The model expects 24 kHz mono PCM16 WAV. Convert a recording (e.g. an `.m4a`) to that format with ffmpeg:
+
+  ```bash
+  ffmpeg -i Assets/realtime-weather-munich.m4a -acodec pcm_s16le -ar 24000 -ac 1 Assets/realtime-weather-munich.wav
+  ```
+
 - **Output audio**: [Output/output.raw](./Output/) — raw 24 kHz mono PCM16 written incrementally as the model streams its response. Convert to WAV with ffmpeg if you want to listen to it:
 
   ```bash

@@ -1,9 +1,9 @@
-#:package OpenAI@2.10.0
-#:package OpenTelemetry.AutoInstrumentation@1.16.0-beta.1
-#:package OpenTelemetry.Instrumentation.Http@1.15.1
-#:package OpenTelemetry.Instrumentation.GrpcCore@1.0.0-beta.11
-#:package OpenTelemetry.Extensions.Hosting@1.15.3
-#:package OpenTelemetry.Exporter.OpenTelemetryProtocol@1.15.3
+#:package OpenAI@2.12.0
+#:package OpenTelemetry.AutoInstrumentation@1.16.0
+#:package OpenTelemetry.Instrumentation.Http@1.16.0
+#:package OpenTelemetry.Instrumentation.GrpcCore@1.0.0-beta.13
+#:package OpenTelemetry.Extensions.Hosting@1.16.0
+#:package OpenTelemetry.Exporter.OpenTelemetryProtocol@1.16.0
 
 using OpenAI.Realtime;
 using System.Diagnostics;
@@ -36,19 +36,19 @@ public static class RealtimeExamples
 
     private static readonly RealtimeFunctionTool getCurrentWeatherTool = new(functionName: nameof(GetCurrentWeather))
     {
-        FunctionDescription = "ruft das Wetter für einen Ort ab",
+        FunctionDescription = "gets the weather for a location",
         FunctionParameters = BinaryData.FromString("""
             {
                 "type": "object",
                 "properties": {
                     "location": {
                         "type": "string",
-                        "description": "Die Stadt und das Bundesland, z. B. Heide-Park Soltau/Niedersachsen, Deutschland"
+                        "description": "The city and state, e.g. Munich, Germany"
                     },
                     "unit": {
                         "type": "string",
                         "enum": [ "celsius", "fahrenheit" ],
-                        "description": "Die zu verwendende Temperatureinheit. Leite diese aus dem angegebenen Ort ab."
+                        "description": "The temperature unit to use. Infer this from the specified location."
                     }
                 },
                 "required": [ "location" ]
@@ -60,20 +60,21 @@ public static class RealtimeExamples
     {
         // Call the datetime API here.
         var dateTime = DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss") + " UTC";
+        //var dateTime = new DateTime(2026, 7, 16, 18, 30, 0).ToString("yyyy-MM-dd HH:mm:ss") + " CEST";
         logger.LogInformation($"Getting current date and time for {location}: {dateTime}");
         return dateTime;
     }
 
     private static readonly RealtimeFunctionTool getCurrentDateTimeTool = new(functionName: nameof(GetDateTime))
     {
-        FunctionDescription = "ruft das aktuelle Datum und die Uhrzeit für einen Ort ab",
+        FunctionDescription = "gets the current date and time for a location",
         FunctionParameters = BinaryData.FromString("""
             {
                 "type": "object",
                 "properties": {
                     "location": {
                         "type": "string",
-                        "description": "Die Stadt und das Bundesland, z. B. Heide-Park Soltau/Niedersachsen, Deutschland"
+                        "description": "The city and state, e.g. Munich, Germany"
                     }
                 },
                 "required": [ "location" ]
@@ -101,9 +102,9 @@ public static class RealtimeExamples
 
             RealtimeConversationSessionOptions sessionOptions = new()
             {
-                Instructions = "Du bist ein fröhlicher Assistent, der wie ein Pirat mit Norddeutschem Akzent auf Deutsch spricht. "
-                    + "Informiere den Benutzer immer, wenn du gerade ein Tool aufrufen wirst. "
-                    + "Bevorzuge den Aufruf von Tools, wann immer es passt.",
+                Instructions = "You are a cheerful assistant that talks like a farmer with a English-Bavarian accent. "
+                    + "Always inform the user when you are about to call a tool. "
+                    + "Prefer to call tools whenever applicable.",
 
                 Tools = { getCurrentWeatherTool, getCurrentDateTimeTool },
 
@@ -134,15 +135,15 @@ public static class RealtimeExamples
                 // conversation one by one. Note that adding a message will not automatically initiate
                 // a response from the model.
                 var userMessage =
-                    "Ich versuche zu entscheiden, was ich auf meiner Reise anziehen soll. "
-                    + "Mach eine lustige Bemerkung zur diesjährigen Ausgabe von `Cloud Land 2026`, an der ich teilnehme. "
-                    + "Hole dann das aktuelle Datum/die Uhrzeit im Heide-Park Soltau/Deutschland und füge das in deine Antwort ein.";
+                    "I'm trying to decide what to wear on my trip. "
+                    + "Make a fun statement about the `TestMu AI Offline Meetup Munich` that I am attending. "
+                    + "Then, get the current date/time in Munich, Germany and include that in your response.";
                 await sessionClient.AddItemAsync(RealtimeItem.CreateUserMessageItem(userMessage));
 
                 // using (var sendInputActivity = activitySource.StartActivity("SendInput", ActivityKind.Internal))
                 // {
                 //string inputAudioFilePath = Path.Join("Assets", "realtime_whats_the_weather_pcm16_24khz_mono.wav");
-                string inputAudioFilePath = Path.Join("Assets", "realtime-wetter-heide-park.wav");
+                string inputAudioFilePath = Path.Join("Assets", "realtime-weather-munich.wav");
                 using Stream inputAudioStream = File.OpenRead(inputAudioFilePath);
                 _ = sessionClient.SendInputAudioAsync(inputAudioStream);
                 // }
@@ -283,12 +284,12 @@ public static class RealtimeExamples
                                         string output = string.Empty;
                                         if (functionCallItem.FunctionName == nameof(GetDateTime))
                                         {
-                                            output = GetDateTime(location: "Heide-Park Soltau/Deutschland");
+                                            output = GetDateTime(location: "Munich, Germany");
                                         }
                                         else if (functionCallItem.FunctionName == nameof(GetCurrentWeather))
                                         {
 
-                                            output = GetCurrentWeather(location: "Heide-Park Soltau/Deutschland");
+                                            output = GetCurrentWeather(location: "Munich, Germany");
                                         }
 
                                         RealtimeItem functionCallOutputItem = RealtimeItem.CreateFunctionCallOutputItem(
