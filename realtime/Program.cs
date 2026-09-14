@@ -43,7 +43,7 @@ public static class RealtimeExamples
                 "properties": {
                     "location": {
                         "type": "string",
-                        "description": "The city and state, e.g. Munich, Germany"
+                        "description": "The city and state, e.g. Zadar, Croatia"
                     },
                     "unit": {
                         "type": "string",
@@ -74,7 +74,7 @@ public static class RealtimeExamples
                 "properties": {
                     "location": {
                         "type": "string",
-                        "description": "The city and state, e.g. Munich, Germany"
+                        "description": "The city and state, e.g. Zadar, Croatia"
                     }
                 },
                 "required": [ "location" ]
@@ -100,9 +100,23 @@ public static class RealtimeExamples
 
             using RealtimeSessionClient sessionClient = await client.StartConversationSessionAsync(model: "gpt-realtime");
 
+            // Setting TurnDetection to null (or leaving it unset) is treated as "untouched" and gets
+            // omitted from the session update entirely, leaving the server's own VAD default in place.
+            // DisableTurnDetection() is the API that actually serializes an explicit `"turn_detection": null`.
+            RealtimeConversationSessionInputAudioOptions inputAudioOptions = new()
+            {
+                // AudioFormat = new GARealtimePcmAudioFormat(),
+                AudioTranscriptionOptions = new()
+                {
+                    Model = "gpt-4o-transcribe",
+                },
+            };
+            inputAudioOptions.DisableTurnDetection();
+
             RealtimeConversationSessionOptions sessionOptions = new()
             {
-                Instructions = "You are a cheerful assistant that talks like a farmer with a English-Bavarian accent. "
+                Instructions = "You are a cheerful assistant that talks like a native Croatian citizen from Zadar. "
+                    + "Respond in Croatian. "
                     + "Always inform the user when you are about to call a tool. "
                     + "Prefer to call tools whenever applicable.",
 
@@ -110,15 +124,7 @@ public static class RealtimeExamples
 
                 AudioOptions = new()
                 {
-                    InputAudioOptions = new()
-                    {
-                        // AudioFormat = new GARealtimePcmAudioFormat(),
-                        AudioTranscriptionOptions = new()
-                        {
-                            Model = "gpt-4o-transcribe",
-                        },
-                        TurnDetection = new RealtimeServerVadTurnDetection(),
-                    },
+                    InputAudioOptions = inputAudioOptions,
                     OutputAudioOptions = new()
                     {
                         // AudioFormat = new GARealtimePcmAudioFormat(),
@@ -136,16 +142,21 @@ public static class RealtimeExamples
                 // a response from the model.
                 var userMessage =
                     "I'm trying to decide what to wear on my trip. "
-                    + "Make a fun statement about the `TestMu AI Offline Meetup Munich` that I am attending. "
-                    + "Then, get the current date/time in Munich, Germany and include that in your response.";
+                    + "Make a fun statement about `Infobip Shift 2026 Zadar` that I am attending. "
+                    + "Then, get the current date/time in Zadar/Croatia and include that in your response.";
                 await sessionClient.AddItemAsync(RealtimeItem.CreateUserMessageItem(userMessage));
 
                 // using (var sendInputActivity = activitySource.StartActivity("SendInput", ActivityKind.Internal))
                 // {
                 //string inputAudioFilePath = Path.Join("Assets", "realtime_whats_the_weather_pcm16_24khz_mono.wav");
-                string inputAudioFilePath = Path.Join("Assets", "realtime-weather-munich.wav");
+                string inputAudioFilePath = Path.Join("Assets", "intro-harry-zadar.wav");
                 using Stream inputAudioStream = File.OpenRead(inputAudioFilePath);
-                _ = sessionClient.SendInputAudioAsync(inputAudioStream);
+                logger.LogInformation($">> Sending input audio from {inputAudioFilePath}...");
+                await sessionClient.SendInputAudioAsync(inputAudioStream);
+                logger.LogInformation(">> Finished sending input audio.");
+
+                await sessionClient.CommitPendingAudioAsync();
+                await sessionClient.StartResponseAsync();
                 // }
 
                 string outputAudioFilePath = Path.Join("Output", "output.raw");
@@ -284,12 +295,12 @@ public static class RealtimeExamples
                                         string output = string.Empty;
                                         if (functionCallItem.FunctionName == nameof(GetDateTime))
                                         {
-                                            output = GetDateTime(location: "Munich, Germany");
+                                            output = GetDateTime(location: "Zadar, Croatia");
                                         }
                                         else if (functionCallItem.FunctionName == nameof(GetCurrentWeather))
                                         {
 
-                                            output = GetCurrentWeather(location: "Munich, Germany");
+                                            output = GetCurrentWeather(location: "Zadar, Croatia");
                                         }
 
                                         RealtimeItem functionCallOutputItem = RealtimeItem.CreateFunctionCallOutputItem(
