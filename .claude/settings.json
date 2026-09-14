@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(env)",
+      "Bash(timeout 60 dotnet Program.cs)",
+      "Bash(git -C /Users/hkimpel/projects/ai/microsoft-foundry-o11y-samples status --short)",
+      "Bash(find /Users/hkimpel/projects/ai/microsoft-foundry-o11y-samples -iname \"*.env*\" -not -path \"*/node_modules/*\" 2>/dev/null; echo \"---\"; ls -la ~/.otel-dotnet-auto 2>/dev/null | head -20)",
+      "Read(//Users/hkimpel/.otel-dotnet-auto/**)",
+      "Bash(xxd Output/output.wav)",
+      "Bash(afinfo Assets/intro-harry-zadar.wav)",
+      "Bash(ffprobe -hide_banner Assets/intro-harry-zadar.wav)",
+      "Bash(ffmpeg -i Assets/intro-harry-zadar.wav -af silencedetect=noise=-30dB:d=0.3 -f null -)",
+      "Bash(find ~/.nuget/packages -iname \"*OpenAI*\" -maxdepth 1 2>/dev/null | head; echo \"---\"; find ~/.nuget/packages -ipath \"*openai*\" -iname \"*.dll\" 2>/dev/null | grep -i \"2.12\" | head -20)",
+      "Read(//Users/hkimpel/.nuget/packages/**)",
+      "Bash(xxd Assets/intro-harry-zadar.wav)",
+      "Bash(dotnet tool *)",
+      "Bash(dotnet inspect.cs)",
+      "Bash(dotnet inspect2.cs)",
+      "Bash(dotnet inspect3.cs)",
+      "Bash(dotnet inspect4.cs)",
+      "Bash(dotnet inspect5.cs)",
+      "Bash(dotnet inspect6.cs)",
+      "Bash(dotnet inspect7.cs)",
+      "Bash(afinfo Output/output.wav)"
+    ],
+    "additionalDirectories": [
+      "/tmp",
+      "/private/tmp"
+    ]
+  }
+}
