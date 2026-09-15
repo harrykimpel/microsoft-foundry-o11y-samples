@@ -146,24 +146,14 @@
         <form action="/plan" method="post" id="travelForm">
             <div class="form-row">
                 <div class="form-section">
-                    <h2>🌍 Select Your Destination</h2>
-                    <label for="origin">📍 Origin:</label>
-                    <input type="text" id="origin" name="origin" placeholder="e.g., New York, USA" required>
-                    
-                    <label for="destination">🎯 Destination:</label>
-                    <select id="destination" name="destination" required>
-                        <option value="">-- Choose a destination --</option>
-                        {% for dest, desc in destinations.items() %}
-                        <option value="{{ dest }}" data-description="{{ desc }}">{{ dest }}</option>
-                        {% endfor %}
-                    </select>
-                    <div id="destinationDescription" style="margin-top: 10px; padding: 12px; background: linear-gradient(135deg, rgba(0, 206, 124, 0.1), rgba(0, 255, 140, 0.05)); border-radius: 8px; display: none; font-size: 0.95em; color: #00AC69; font-weight: 600;"></div>
+                    <h2>🎲 Destination</h2>
+                    <p style="color: #555;">Your destination will be selected randomly by our AI agent from a curated list of amazing places!</p>
                 </div>
                 <div class="form-section">
                     <h2>✨ Trip Details</h2>
                     <label for="date">📅 Start Date:</label>
                     <input type="date" id="date" name="date" required>
-                    
+
                     <label for="duration">⏱️ Trip Duration (days):</label>
                     <input type="number" id="duration" name="duration" min="1" max="30" value="3" required>
                 </div>
@@ -227,23 +217,7 @@
         const today = new Date().toISOString().split('T')[0];
         dateInput.setAttribute('min', today);
         dateInput.value = today;
-        
-        // Show destination description when selected
-        const destinationSelect = document.getElementById('destination');
-        const descriptionDiv = document.getElementById('destinationDescription');
-        
-        destinationSelect.addEventListener('change', function() {
-            const selectedOption = this.options[this.selectedIndex];
-            const description = selectedOption.getAttribute('data-description');
-            
-            if (description && this.value) {
-                descriptionDiv.textContent = description;
-                descriptionDiv.style.display = 'block';
-            } else {
-                descriptionDiv.style.display = 'none';
-            }
-        });
-        
+
         // Update form action based on security mode
         const securityModeSelect = document.getElementById('security_mode');
         const travelForm = document.getElementById('travelForm');

@@ -64,7 +64,6 @@ if (app.Environment.IsDevelopment())
 
 var endpoint = Environment.GetEnvironmentVariable("MSFT_FOUNDRY_ENDPOINT")?.Trim() ?? throw new InvalidOperationException("MSFT_FOUNDRY_ENDPOINT is not set.");
 endpoint = endpoint.Replace("/openai/v1", ""); // Remove path if user set the endpoint to the full URL by mistake, we only need the base URL for AzureOpenAIClient.)
-app.Logger.LogInformation("Foundry endpoint: {endpoint}", endpoint);
 var endpointAPIKey = Environment.GetEnvironmentVariable("MSFT_FOUNDRY_API_KEY")?.Trim() ?? throw new InvalidOperationException("MSFT_FOUNDRY_API_KEY is not set.");
 var deploymentName = Environment.GetEnvironmentVariable("MSFT_FOUNDRY_DEPLOYMENT_NAME")?.Trim();
 if (string.IsNullOrWhiteSpace(deploymentName))
@@ -95,26 +94,26 @@ if (endpointUri.AbsolutePath is not "/" and not "" || !string.IsNullOrEmpty(endp
         "Do not include paths like /openai/deployments/... or query parameters.");
 }
 
-app.MapGet("/", () => "Der API-Dienst läuft. Rufe /weatherforecast auf, um Beispieldaten zu sehen.");
+app.MapGet("/", () => "API service is running. Navigate to /weatherforecast to see sample data.");
 
-string[] summaries = ["Eiskalt", "Frostig", "Kühl", "Frisch", "Mild", "Warm", "Lau", "Heiß", "Schwül", "Glühend"];
+string[] summaries = ["Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"];
 
 Dictionary<string, string> destinations = new(StringComparer.OrdinalIgnoreCase)
 {
-    ["Garmisch-Partenkirchen, Deutschland"] = "🏔️ Alpendorf mit atemberaubendem Bergpanorama",
-    ["München, Deutschland"] = "🍺 Bayerische Hauptstadt, berühmt für Kultur und Bier",
-    ["Berlin, Deutschland"] = "🎨 Historisches und lebendiges Kulturzentrum",
-    ["Rom, Italien"] = "🏛️ Antike Stadt mit reicher Geschichte und Kunst",
-    ["Barcelona, Spanien"] = "🏖️ Küstenstadt mit beeindruckender Architektur",
-    ["Boston, USA"] = "🍀 Historische Stadt mit reichem kolonialem Erbe",
-    ["New York, USA"] = "🗽 Die Stadt, die niemals schläft",
-    ["Tokio, Japan"] = "🗾 Pulsierende Metropole mit alten Tempeln",
-    ["Sydney, Australien"] = "🦘 Opernhaus und wunderschöne Strände",
-    ["Kairo, Ägypten"] = "🔺 Tor zu antiken Wundern",
-    ["Kapstadt, Südafrika"] = "🌅 Landschaftliche Schönheit und Tafelberg",
-    ["Rio de Janeiro, Brasilien"] = "🎭 Lebendige Kultur und Strände",
-    ["Bali, Indonesien"] = "🌴 Tropisches Paradies und spirituelle Oase",
-    ["Paris, Frankreich"] = "🗼 Die Stadt der Lichter, romantisch und ikonisch"
+    ["Garmisch-Partenkirchen, Germany"] = "🏔️ Alpine village with stunning mountain views",
+    ["Munich, Germany"] = "🍺 Bavarian capital famous for culture and beer",
+    ["Berlin, Germany"] = "🎨 Historic and vibrant cultural hub",
+    ["Rome, Italy"] = "🏛️ Ancient city with rich history and art",
+    ["Barcelona, Spain"] = "🏖️ Coastal city with stunning architecture",
+    ["Boston, USA"] = "🍀 Historic city with rich colonial heritage",
+    ["New York, USA"] = "🗽 The city that never sleeps",
+    ["Tokyo, Japan"] = "🗾 Bustling metropolis with ancient temples",
+    ["Sydney, Australia"] = "🦘 Opera House and beautiful beaches",
+    ["Cairo, Egypt"] = "🔺 Gateway to ancient wonders",
+    ["Cape Town, South Africa"] = "🌅 Scenic beauty and Table Mountain",
+    ["Rio de Janeiro, Brazil"] = "🎭 Vibrant culture and beaches",
+    ["Bali, Indonesia"] = "🌴 Tropical paradise and spiritual haven",
+    ["Paris, France"] = "🗼 The City of Light, romantic and iconic"
 };
 
 // Create the chat client and agent, and provide the function tool to the agent.
@@ -126,14 +125,14 @@ var instrumentedChatClient = new AzureOpenAIClient(
     .GetChatClient(deploymentName)
     .AsIChatClient() // Converts a native OpenAI SDK ChatClient into a Microsoft.Extensions.AI.IChatClient
     .AsBuilder()
-    .UseOpenTelemetry(sourceName: "aspire-apiservice", configure: (cfg) => cfg.EnableSensitiveData = enableSensitiveData)    // Enable OpenTelemetry instrumentation with sensitive data
+    .UseOpenTelemetry(SourceName, configure: (cfg) => cfg.EnableSensitiveData = enableSensitiveData)    // Enable OpenTelemetry instrumentation with sensitive data
     .Build();
 
 // Create the main agent, and provide the weather, random destination, and date/time as function tools.
 var agent = new ChatClientAgent(
         instrumentedChatClient,
         name: "Travel-Planner-Agent",
-        instructions: "Du bist ein hilfsbereiter Assistent, der prägnante und informative Antworten auf Deutsch liefert.",
+        instructions: "You are a helpful assistant that provides concise and informative responses.",
         tools: [
             AIFunctionFactory.Create(GetWeather),
             AIFunctionFactory.Create(GetRandomDestination),
@@ -194,7 +193,7 @@ app.MapPost("/travelplan", async (TravelPlanRequest request, CancellationToken c
     if (request.StartDate <= DateOnly.FromDateTime(DateTime.UtcNow))
     {
         app.Logger.LogError("Start date must be in the future. Received start date: {StartDate}", request.StartDate);
-        return Results.BadRequest("Das Startdatum muss in der Zukunft liegen.");
+        return Results.BadRequest("Start date must be in the future.");
     }
 
     var nights = Math.Max(1, request.Nights);
@@ -204,9 +203,9 @@ app.MapPost("/travelplan", async (TravelPlanRequest request, CancellationToken c
     using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
 
     string suggestions =
-    @"- Besuche lokale Sehenswürdigkeiten und Museen
-      - Probiere eine kulinarische Tour durch das Viertel aus
-      - Reserviere einen Tag für ein entspanntes Programm";
+    @"- Visit local landmarks and museums
+      - Try a neighborhood food tour
+      - Reserve one day for a relaxed itinerary";
 
     var itinerary = string.Empty;
 
@@ -214,23 +213,21 @@ app.MapPost("/travelplan", async (TravelPlanRequest request, CancellationToken c
     {
         var duration = (request.Nights + 1).ToString();
         var date = request.StartDate.ToString("yyyy-MM-dd");
-        string userPrompt = $@"Plane mir eine {duration}-tägige Reise zu einem zufälligen Reiseziel, beginnend am {date}.
+        string userPrompt = $@"Plan me a {duration}-day trip to a random destination starting on {date}.
 
-            Reisedetails:
-                - Datum: {date}
-                - Dauer: {duration} Tage
-                - Interessen:
+            Trip Details:
+                - Date: {date}
+                - Duration: {duration} days
+                - Interests: 
                   {suggestions}
 
-            Anweisungen:
-                1. Einen detaillierten Tag-für-Tag-Reiseplan mit Aktivitäten, die auf die Interessen abgestimmt sind
-                2. Aktuelle Wetterinformationen für das Reiseziel
-                3. Empfehlungen zur lokalen Küche
-                4. Beste Zeiten zum Besuch bestimmter Sehenswürdigkeiten
-                5. Reisetipps und Budgetschätzungen
-                6. Aktuelles Datum und Uhrzeit als Referenz
-
-            Antworte ausschließlich auf Deutsch.";
+            Instructions:
+                1. A detailed day-by-day itinerary with activities tailored to the interests
+                2. Current weather information for the destination
+                3. Local cuisine recommendations
+                4. Best times to visit specific attractions
+                5. Travel tips and budget estimates
+                6. Current date and time reference";
 
         app.Logger.LogInformation("Invoking agent with prompt: {UserPrompt}", userPrompt);
         DateTime agentStartTime = DateTime.UtcNow;
@@ -371,7 +368,7 @@ app.MapPost("/travelplan", async (TravelPlanRequest request, CancellationToken c
     return Results.Ok(new TravelPlanResponse(
         request.StartDate,
         nights,
-        $"Beispielplan für {request.TravelerName} erstellt.",
+        $"Mock plan generated for {request.TravelerName}.",
         itinerary));
 })
 .WithName("CreateTravelPlan");

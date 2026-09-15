@@ -1,9 +1,9 @@
-#:package OpenAI@2.10.0
-#:package OpenTelemetry.AutoInstrumentation@1.16.0-beta.1
-#:package OpenTelemetry.Instrumentation.Http@1.15.1
-#:package OpenTelemetry.Instrumentation.GrpcCore@1.0.0-beta.11
-#:package OpenTelemetry.Extensions.Hosting@1.15.3
-#:package OpenTelemetry.Exporter.OpenTelemetryProtocol@1.15.3
+#:package OpenAI@2.13.0
+#:package OpenTelemetry.AutoInstrumentation@1.16.0
+#:package OpenTelemetry.Instrumentation.Http@1.18.0
+#:package OpenTelemetry.Instrumentation.GrpcCore@1.0.0-beta.15
+#:package OpenTelemetry.Extensions.Hosting@1.18.0
+#:package OpenTelemetry.Exporter.OpenTelemetryProtocol@1.18.0
 
 using OpenAI;
 using OpenAI.Chat;
@@ -29,8 +29,12 @@ string OpenTelemetryExporterEndpoint = Environment.GetEnvironmentVariable("OTEL_
 string OpenTelemetryApiKey = Environment.GetEnvironmentVariable("NEW_RELIC_LICENSE_KEY") ?? "YOUR_NEW_RELIC_LICENSE_KEY_HERE";
 
 var tracerProvider = Sdk.CreateTracerProviderBuilder()
-    .AddSource("OpenAI.*")
     .AddSource(ActivitySourceName)
+    .AddSource("Microsoft.Extensions.AI*")
+    .AddSource("OpenAI*")
+    .AddSource("Experimental.OpenAI*")
+    .AddSource("Azure.AI.OpenAI*")
+    .AddHttpClientInstrumentation()
     .ConfigureResource(resource =>
         resource.AddService(
           serviceName: ActivitySourceName,
@@ -43,7 +47,8 @@ var tracerProvider = Sdk.CreateTracerProviderBuilder()
     .Build();
 
 var meterProvider = Sdk.CreateMeterProviderBuilder()
-    .AddMeter("OpenAI.*")
+    .AddMeter("Microsoft.Extensions.AI*")
+    .AddMeter("OpenAI*")
     .AddOtlpExporter(options =>
     {
         options.Endpoint = new Uri(OpenTelemetryExporterEndpoint);
@@ -86,14 +91,16 @@ using (var myMainActivity = activitySource.StartActivity("main", ActivityKind.In
         myChatActivity?.SetTag("transaction.type", "custom");
         myChatActivity?.SetTag("transaction.name", "CompleteChat");
 
-        string userPrompt = "Was ist der beste Weg, einen Papagei zu trainieren?";
+        string userPrompt = "What's the best way to train a parrot?";
+
+        myChatActivity?.SetTag("gen_ai.input.messages", userPrompt);
 
         DateTime startTime = DateTime.UtcNow;
         ChatCompletion completion = await client.CompleteChatAsync(
         [
-            new SystemChatMessage("Du bist ein hilfsbereiter Assistent, der auf Deutsch wie ein Pirat mit Bostoner Akzent spricht."),
-            new UserChatMessage("Hallo, kannst du mir helfen?"),
-            new AssistantChatMessage("Arrr! Aber selbstverständlich, mein Freund! Was kann ich für dich tun?"),
+            new SystemChatMessage("You are a helpful assistant that talks like a pirate with a Boston accent."),
+            new UserChatMessage("Hi, can you help me?"),
+            new AssistantChatMessage("Arrr! Of course, me hearty! What can I do for ye?"),
             new UserChatMessage(userPrompt),
         ]);
         DateTime endTime = DateTime.UtcNow;
@@ -108,6 +115,7 @@ using (var myMainActivity = activitySource.StartActivity("main", ActivityKind.In
             if (message != null)
             {
                 logger.LogInformation($"Message: {message}");
+                myChatActivity?.SetTag("gen_ai.output.messages", message);
                 // Log only the first 4000 characters to avoid excessively large logs
                 assistantMessageContent = message.Substring(0, Math.Min(message.Length, 4000));
             }
